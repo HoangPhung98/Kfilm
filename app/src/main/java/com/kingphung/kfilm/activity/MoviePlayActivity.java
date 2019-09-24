@@ -36,7 +36,7 @@ public class MoviePlayActivity extends AppCompatActivity {
         setFullScreen();
 
         //get a movie object from MainActivity through intent using passing Serializable
-        //then get link drive and subtitle from that object
+        //then get link drive and subtitle from that object.
         Movie movie = (Movie)getIntent().getSerializableExtra("MOVIE");
         link_GGDRIVE = movie.getLink_drive();
         link_Subtitle = movie.getLink_subtitle();
