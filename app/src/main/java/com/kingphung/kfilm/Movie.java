@@ -1,8 +1,9 @@
 package com.kingphung.kfilm;
 
-import android.widget.ImageView;
 
-public class Movie {
+import java.io.Serializable;
+
+public class Movie implements Serializable {
     private String id;
     private String name;
     private String product_year;
@@ -11,9 +12,10 @@ public class Movie {
     private String statusSub;
     private String description;
     private String director;
-    private String id_drive;
+    private String link_drive;
+    private String link_subtitle;
 
-    public Movie(String id, String name, String product_year, String img_url, String IMDB, String statusSub, String description, String director, String id_drive) {
+    public Movie(String id, String name, String product_year, String img_url, String IMDB, String statusSub, String description, String director, String link_drive, String link_subtitle) {
         this.id = id;
         this.name = name;
         this.product_year = product_year;
@@ -22,7 +24,8 @@ public class Movie {
         this.statusSub = statusSub;
         this.description = description;
         this.director = director;
-        this.id_drive = id_drive;
+        this.link_drive = link_drive;
+        this.link_subtitle = link_subtitle;
     }
 
     public String getId() {
@@ -89,11 +92,19 @@ public class Movie {
         this.director = director;
     }
 
-    public String getId_drive() {
-        return id_drive;
+    public String getLink_drive() {
+        return link_drive;
     }
 
-    public void setId_drive(String id_drive) {
-        this.id_drive = id_drive;
+    public void setLink_drive(String link_drive) {
+        this.link_drive = link_drive;
+    }
+
+    public String getLink_subtitle() {
+        return link_subtitle;
+    }
+
+    public void setLink_subtitle(String link_subtitle) {
+        this.link_subtitle = link_subtitle;
     }
 }

@@ -37,7 +37,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, MoviePlayActivity.class);
-                intent.putExtra("LINK_GGDRIVE", API.GetLinkGGDrive(listMovie.get(position).getId_drive()));
+                intent.putExtra("MOVIE", listMovie.get(position));
+                //intent.putExtra("LINK_GGDRIVE", API.GetLinkGGDrive(listMovie.get(position).getId_drive()));
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }

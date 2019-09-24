@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -69,6 +70,7 @@ public class API {
                         LoadListCategory(listCategory);
                     }
                 });
+        setRequestTimeout(jsonObjectRequest);
         requestQueue.add(jsonObjectRequest);
     }
 
@@ -94,9 +96,10 @@ public class API {
                                         jsonObject.getString("statusSub"),
                                         jsonObject.getString("description"),
                                         jsonObject.getString("director"),
+                                        "",
                                         ""
                                 );
-                                Load_ID_GGDrive(movie, getLink_Films_Link_ID(movie.getId()));
+                                Load_Link_GGDrive_and_Subtitle(movie, getLink_toGetDriveID_and_SubID(movie.getId()));
                                 listMovie.add(movie);
                             }
                             CategoryAdapter adapter = new CategoryAdapter( listCategory, context);
@@ -113,9 +116,11 @@ public class API {
                     }
 
                 });
+        setRequestTimeout(jsonArrayRequest);
         requestQueue.add(jsonArrayRequest);
     }
-    protected void Load_ID_GGDrive(final  Movie movie, final String url){
+
+    protected void Load_Link_GGDrive_and_Subtitle(final  Movie movie, final String url){
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
@@ -126,9 +131,11 @@ public class API {
                         try {
                             JSONArray jsonArray = response.getJSONArray("video");
 
-                            //**************Get one drive ID
+                            //**************Get 1 drive ID and sub link
                             JSONObject jsonObject = (JSONObject) jsonArray.get(jsonArray.length()-1);
-                            movie.setId_drive(jsonObject.getString("driveId"));
+                            movie.setLink_drive(getLinkDriveOrSub(jsonObject.getString("driveId")));
+                            movie.setLink_subtitle(getLinkDriveOrSub(response.getString("sub")));
+                            //>>>
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -140,9 +147,31 @@ public class API {
                         error.printStackTrace();
                     }
                 });
+        setRequestTimeout(jsonObjectRequest);
         requestQueue.add(jsonObjectRequest);
     }
-    public String getLink_Films_Link_ID(String ID){
+    private String getLinkDriveOrSub(String id_drive_or_sub){
+       return LINK_GG_DRIVE + id_drive_or_sub + KEY;
+    }
+    private void setRequestTimeout(Request request){
+        request.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 10000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 10000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
+    }
+    public String getLink_toGetDriveID_and_SubID(String ID){
         return IP+"/films/link/"+ID;
     }
     public RequestQueue getRequestQueue() {
