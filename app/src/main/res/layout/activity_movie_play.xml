@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MoviePlayActivity"
+    tools:context=".activity.MoviePlayActivity"
     android:background="#000000">
 
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView

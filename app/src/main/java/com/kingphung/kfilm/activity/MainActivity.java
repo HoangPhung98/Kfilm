@@ -1,4 +1,4 @@
-package com.kingphung.kfilm;
+package com.kingphung.kfilm.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +11,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.kingphung.kfilm.api.API;
+import com.kingphung.kfilm.model.Category;
+import com.kingphung.kfilm.R;
 import com.kingphung.kfilm.fragment.DownloadFragment;
 import com.kingphung.kfilm.fragment.MoreFragment;
 import com.kingphung.kfilm.fragment.SearchFragment;
@@ -22,10 +25,12 @@ public class MainActivity extends AppCompatActivity
         implements SearchFragment.OnFragmentInteractionListener,
                     MoreFragment.OnFragmentInteractionListener,
                     DownloadFragment.OnFragmentInteractionListener{
+
+    //Global variables
     RecyclerView recycler_main;
     BottomNavigationView bottomNavigationView;
     ArrayList<Category> listCategory;
-
+    //Global variables>>>
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,19 @@ public class MainActivity extends AppCompatActivity
         //create an api instance to load from web api>>>
 
 
+        //***CategoryAdapter adapter = new CategoryAdapter( listCategory, context);
+        //***recyclerView.setAdapter(adapter);
+        //if i place those 2 code lines here, the recycler view will display nothing until you
+        //make a change on screen layout like: pressing alt button on computer keyboard to show
+        //keyboard on genymotion device.
+        //that phenomenon happen because of the synchronize problem.
+        //the LoadListCateGory() function is run in background thread, that means when
+        //u call the LoadListCategory() function, then it jump right below to 2 code lines to create
+        // recycler view, but the LoadListCategory() function doesn't load any data at all, that means
+        // recycler view has no data to show, that means it will show back screen and wait until the
+        //screen is change, it rebind the data and show movies.
+        //Summary: We don't do that hear.
+
     }
     private void initUI(){
         //<create recycler view to show list movie categories
@@ -56,7 +74,8 @@ public class MainActivity extends AppCompatActivity
 
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-        //<Handler bottom navigation bar click
+        //<Handler bottom navigation bar click, if an icon is clicked, show the corresponding fragment
+        //fragment is almost like activity, except it's a smaller and simpler version
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -95,6 +114,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction(Uri uri) {
-        //don't know how this works
+        //don't know how this works, docs say it's use to communicate between activity and fragment
     }
 }

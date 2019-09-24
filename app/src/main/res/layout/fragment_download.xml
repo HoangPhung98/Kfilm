@@ -10,6 +10,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:textSize="50sp"
+        android:textColor="#090000"
+        android:text="Download Fragment, code trong file java được tạo mặc đinh" />
 
 </LinearLayout>

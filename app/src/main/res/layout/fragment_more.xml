@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="More Fragment"
+        android:text="More Fragment, code trong file java được tạo mặc đinh"
         android:textSize="50sp"
         android:textColor="#070000"/>
 

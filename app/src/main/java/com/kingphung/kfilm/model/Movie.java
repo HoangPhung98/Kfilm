@@ -1,4 +1,4 @@
-package com.kingphung.kfilm;
+package com.kingphung.kfilm.model;
 
 
 import java.io.Serializable;
