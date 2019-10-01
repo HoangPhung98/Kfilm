@@ -13,9 +13,9 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".activity.MoviePlayActivity"
+            android:name=".view.activity.MoviePlayActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".view.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

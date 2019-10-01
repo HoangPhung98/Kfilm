@@ -1,4 +1,4 @@
-package com.kingphung.kfilm.adapter;
+package com.kingphung.kfilm.model.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

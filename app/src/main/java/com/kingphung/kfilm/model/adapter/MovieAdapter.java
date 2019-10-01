@@ -1,7 +1,9 @@
-package com.kingphung.kfilm.adapter;
+package com.kingphung.kfilm.model.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +12,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kingphung.kfilm.model.Movie;
-import com.kingphung.kfilm.activity.MoviePlayActivity;
+import com.kingphung.kfilm.presenter.playMovie.P_LoadLinkMovie;
+import com.kingphung.kfilm.view.activity.MoviePlayActivity;
 import com.kingphung.kfilm.R;
+import com.kingphung.kfilm.view.showListCategory.V_imp_PlayMovie;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> implements V_imp_PlayMovie {
     ArrayList<Movie> listMovie;
     Context context;
+    V_imp_PlayMovie v_imp_playMovie = this;
 
     public MovieAdapter(ArrayList listMovie, Context context) {
         this.listMovie = listMovie;
@@ -41,14 +46,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         holder.imgMovie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, MoviePlayActivity.class);
-                intent.putExtra("MOVIE", listMovie.get(position));
-                //intent.putExtra("LINK_GGDRIVE", API.GetLinkGGDrive(listMovie.get(position).getId_drive()));
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+                P_LoadLinkMovie loadLinkMovie = new P_LoadLinkMovie(listMovie.get(position).getId(), context, v_imp_playMovie);
+                loadLinkMovie.load();
             }
         });
-
         //map a movie picture to the item of a sub/listMovie recycler view
         Picasso.get().load(listMovie.get(position).getImg_url()).into(holder.imgMovie);
     }
@@ -56,6 +57,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         return listMovie.size();
+    }
+
+    @Override
+    public void play(String url_video, String url_sub) {
+        Log.v("PLAY***", url_video);
+        Intent intent = new Intent(context, MoviePlayActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("URL_VIDEO",url_video);
+        bundle.putString("URL_SUB",url_sub);
+        intent.putExtras(bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
 
