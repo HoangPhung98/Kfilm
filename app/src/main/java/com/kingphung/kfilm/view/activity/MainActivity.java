@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity
 
         initUI();
 
-        p_showListMovie = new P_ShowListMovie(this, getApplicationContext());
+        p_showListMovie = new P_ShowListMovie(this, MainActivity.this);
         p_showListMovie.showListMovie();
 
 

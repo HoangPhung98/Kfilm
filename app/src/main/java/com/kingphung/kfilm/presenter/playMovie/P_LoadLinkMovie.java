@@ -3,7 +3,7 @@ package com.kingphung.kfilm.presenter.playMovie;
 import android.content.Context;
 
 import com.kingphung.kfilm.model.api.API_LoadLinkMovie;
-import com.kingphung.kfilm.view.showListCategory.V_imp_PlayMovie;
+import com.kingphung.kfilm.view.playMovie.V_imp_PlayMovie;
 
 public class P_LoadLinkMovie implements P_Imp_LoadLinkMovie {
     private String ID;

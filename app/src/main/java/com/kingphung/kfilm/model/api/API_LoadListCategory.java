@@ -128,9 +128,6 @@ public class API_LoadListCategory {
         setRequestTimeout(jsonArrayRequest);
         requestQueue.add(jsonArrayRequest);
     }
-
-
-
     private void setRequestTimeout(Request request){
         request.setRetryPolicy(new RetryPolicy() {
             @Override
