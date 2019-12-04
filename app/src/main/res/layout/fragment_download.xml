@@ -8,11 +8,9 @@
     tools:context=".view.fragment.DownloadFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_downloadedMovies"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="50sp"
-        android:textColor="#090000"
-        android:text="Download Fragment, code trong file java được tạo mặc đinh" />
-
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
 </LinearLayout>

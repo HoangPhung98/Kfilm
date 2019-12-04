@@ -100,4 +100,5 @@ public class MainActivity extends AppCompatActivity
     public void showList(CategoryAdapter categoryAdapter) {
         recycler_listCategory.setAdapter(categoryAdapter);
     }
+
 }

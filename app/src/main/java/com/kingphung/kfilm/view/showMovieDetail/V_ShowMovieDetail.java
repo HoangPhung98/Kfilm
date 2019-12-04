@@ -17,15 +17,22 @@ import android.widget.Toast;
 
 import com.kingphung.kfilm.R;
 import com.kingphung.kfilm.model.Movie;
+import com.kingphung.kfilm.presenter.downloadMovie.P_CheckWriteExternalPermission;
+import com.kingphung.kfilm.presenter.downloadMovie.P_DownloadMovie;
 import com.kingphung.kfilm.presenter.playMovie.P_LoadLinkMovie;
 import com.kingphung.kfilm.ultils.Constant;
 import com.kingphung.kfilm.view.activity.MoviePlayActivity;
-import com.kingphung.kfilm.view.playMovie.V_imp_PlayMovie;
+import com.kingphung.kfilm.view.downloadMovie.V_I_CheckWriteExternalPermission;
+import com.kingphung.kfilm.view.downloadMovie.V_I_DownloadMovie;
+import com.kingphung.kfilm.view.playMovie.V_I_LoadLinkMovie;
 import com.squareup.picasso.Picasso;
 
 public class V_ShowMovieDetail
         implements View.OnClickListener,
-        V_imp_PlayMovie {
+        V_I_LoadLinkMovie,
+        V_I_DownloadMovie,
+        V_I_CheckWriteExternalPermission {
+
     Movie movie;
     Context context;
 
@@ -115,12 +122,28 @@ public class V_ShowMovieDetail
 
     private void handle_PlayMovie() {
         Toast.makeText(context, "Play Movie", Toast.LENGTH_LONG).show();
-        P_LoadLinkMovie loadLinkMovie = new P_LoadLinkMovie(movie.getId(), context, this);
+        P_LoadLinkMovie loadLinkMovie = new P_LoadLinkMovie(movie.getId(), context, getImplLoadLinkMovie());
         loadLinkMovie.load();
     }
-
+    private V_I_LoadLinkMovie getImplLoadLinkMovie(){
+        return this;
+    }
     private void handle_DownloadMovie() {
-        Toast.makeText(context,"Download Movie", Toast.LENGTH_LONG).show();
+        P_CheckWriteExternalPermission p_checkWriteExternalPermission =
+                new P_CheckWriteExternalPermission(context, this);
+        p_checkWriteExternalPermission.check();
+    }
+
+    @Override
+    public void onCompleteCheckExternalPermission(boolean isPermissionGranted) {
+        if(isPermissionGranted){
+            Toast.makeText(context,"Permission granted, Download Movie", Toast.LENGTH_LONG).show();
+            P_DownloadMovie p_downloadMovie = new P_DownloadMovie(movie, this, context);
+            p_downloadMovie.startDownload();
+        }else{
+            Toast.makeText(context,"Please grant me permission to download video!", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     private void handle_ExitPopupWindow() {
@@ -128,7 +151,8 @@ public class V_ShowMovieDetail
     }
 
     @Override
-    public void play(String url_video, String url_sub) {
+    public void onCompleteLoadLink(String url_video, String url_sub) {
+        //play movie in new intent
         Log.v("PLAY***", url_video);
         Intent intent = new Intent(context, MoviePlayActivity.class);
         Bundle bundle = new Bundle();
@@ -138,4 +162,15 @@ public class V_ShowMovieDetail
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
+
+    @Override
+    public void onCompleteDownload(boolean isDownloadSuccessfully, Movie movie) {
+        if(isDownloadSuccessfully){
+            Toast.makeText(context, "Download successfully!" + movie.getName(), Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(context, "Download failed!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
 }
