@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.kingphung.kfilm.model.Category;
+import com.kingphung.kfilm.model.Movie;
 import com.kingphung.kfilm.model.adapter.CategoryAdapter;
 import com.kingphung.kfilm.R;
 import com.kingphung.kfilm.presenter.showListCategory.P_ShowListMovie;
@@ -19,6 +21,11 @@ import com.kingphung.kfilm.view.fragment.MoreFragment;
 import com.kingphung.kfilm.view.fragment.SearchFragment;
 import com.kingphung.kfilm.view.showListCategory.V_ShowListMovie;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 public class MainActivity extends AppCompatActivity
         implements SearchFragment.OnFragmentInteractionListener,
                     MoreFragment.OnFragmentInteractionListener,
@@ -26,9 +33,13 @@ public class MainActivity extends AppCompatActivity
                     V_ShowListMovie {
 
     //Global variables
+    public static ArrayList<Movie> listAllMovie;
     RecyclerView recycler_listCategory;
+    CategoryAdapter categoryAdapter;
     BottomNavigationView bottomNavigationView;
     P_ShowListMovie p_showListMovie;
+
+    private boolean isAdapterSeted = false;
     //Global variables>>>
 
     @Override
@@ -36,17 +47,17 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //listAllMovie is used for search fragment
+        listAllMovie = new ArrayList<>();
         initUI();
 
-        p_showListMovie = new P_ShowListMovie(this, MainActivity.this);
+        p_showListMovie = new P_ShowListMovie(this, MainActivity.this, categoryAdapter);
         p_showListMovie.showListMovie();
-
-
     }
     private void initUI(){
         //<create recycler view to show list movie categories
         recycler_listCategory = findViewById(R.id.recycler_main);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recycler_listCategory.setHasFixedSize(true);
         recycler_listCategory.setLayoutManager(linearLayoutManager);
         //<create recycler view to show list movie categories>>>
@@ -63,7 +74,7 @@ public class MainActivity extends AppCompatActivity
                         clearAllFragmentFromBackStack();
                         return true;
                     case R.id.nav_search:
-                        loadFragment(new SearchFragment());
+                        loadFragment(new SearchFragment(new ArrayList<Movie>(listAllMovie)));
                         return true;
                     case R.id.nav_download:
                         loadFragment(new DownloadFragment());
@@ -98,7 +109,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void showList(CategoryAdapter categoryAdapter) {
-        recycler_listCategory.setAdapter(categoryAdapter);
+        if(!isAdapterSeted) recycler_listCategory.setAdapter(categoryAdapter);
+        else {
+            categoryAdapter.notifyDataSetChanged();
+        }
     }
 
 }

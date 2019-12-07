@@ -1,6 +1,8 @@
 package com.kingphung.kfilm.model;
 
 
+import androidx.annotation.Nullable;
+
 import java.io.Serializable;
 
 public class Movie implements Serializable {
@@ -22,6 +24,11 @@ public class Movie implements Serializable {
         this.statusSub = statusSub;
         this.description = description;
         this.director = director;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return this.name.equals(((Movie)obj).getName());
     }
 
     public String getId() {
