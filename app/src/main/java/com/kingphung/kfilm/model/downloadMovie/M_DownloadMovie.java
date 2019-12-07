@@ -6,7 +6,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.kingphung.kfilm.model.Movie;
+import com.kingphung.kfilm.model.adapter.DownloadedMovieAdapter;
 import com.kingphung.kfilm.presenter.downloadMovie.P_I_DownloadMovie;
+import com.kingphung.kfilm.ultils.Constant;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -22,14 +24,20 @@ public class M_DownloadMovie {
     //for debug
     String url_test = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
     Movie movie;
+    String url_video;
+    String url_sub;
     P_I_DownloadMovie p_i_downloadMovie;
-    public M_DownloadMovie(Movie movie, P_I_DownloadMovie p_i_downloadMovie){
+    public M_DownloadMovie(Movie movie, String url_video, String url_sub, P_I_DownloadMovie p_i_downloadMovie){
         this.movie = movie;
+        this.url_video = url_video;
+        this.url_sub = url_sub;
         this.p_i_downloadMovie = p_i_downloadMovie;
     }
 
     public void startDownload(){
-        new DownloadMovieAsyncTask().execute(url_test);
+        new DownloadMovieAsyncTask(Constant.MP4_EXTENSION).execute(url_test);
+        new DownloadMovieAsyncTask(Constant.SRT_EXTENSION).execute(url_sub);
+        new DownloadMovieAsyncTask(Constant.JPEG_EXTENSION).execute(movie.getImg_url());
     }
 
     private class DownloadMovieAsyncTask extends AsyncTask<String, String, String>{
@@ -37,6 +45,12 @@ public class M_DownloadMovie {
         private String fileName;
         private String folderName;
         private boolean isDownloadSuccessfully;
+        private String typeOfExtension;
+
+
+        public DownloadMovieAsyncTask(String typeOfExtension){
+            this.typeOfExtension = typeOfExtension;
+        }
 
         @Override
         protected String doInBackground(String... strings) {
@@ -56,16 +70,17 @@ public class M_DownloadMovie {
                 //set up input stream to fetch data from connection
                 InputStream inputStream = new BufferedInputStream(url.openStream(), 8192);
 
-                //uri for file to store in device
-                //time stamp
-                //String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-                //extract file name from url
-                fileName = strings[0].substring(strings[0].lastIndexOf('/')+1);
-                //test
-                fileName = "testname";
-                fileName = fileName + "_"+".mp4";
+                //create file name base on movie name
+                fileName = movie.getName();
+                fileName = concateFileExtension(fileName, typeOfExtension);
+
                 //create folder name
-                folderName = Environment.getExternalStorageDirectory()+ File.separator + "Kfilm" + File.separator;
+                folderName = Environment.getExternalStorageDirectory()+
+                            File.separator +
+                            "Kfilm" +
+                            File.separator +
+                            movie.getName() +
+                            File.separator;
 
                 //create folder Kfilm if not exist
                 File folderDir = new File(folderName);
@@ -102,8 +117,13 @@ public class M_DownloadMovie {
 
         @Override
         protected void onPostExecute(String s) {
-            this.isDownloadSuccessfully = true;
-            p_i_downloadMovie.onCompleteDownloadMovie(isDownloadSuccessfully, movie);
+            if(typeOfExtension == Constant.MP4_EXTENSION){
+                this.isDownloadSuccessfully = true;
+                p_i_downloadMovie.onCompleteDownloadMovie(isDownloadSuccessfully, movie);
+            }
+        }
+        private String concateFileExtension(String fileName, String typeOfExtension){
+            return fileName + typeOfExtension;
         }
     }
 

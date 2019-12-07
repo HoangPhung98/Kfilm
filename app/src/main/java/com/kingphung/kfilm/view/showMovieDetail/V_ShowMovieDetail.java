@@ -24,7 +24,7 @@ import com.kingphung.kfilm.ultils.Constant;
 import com.kingphung.kfilm.view.activity.MoviePlayActivity;
 import com.kingphung.kfilm.view.downloadMovie.V_I_CheckWriteExternalPermission;
 import com.kingphung.kfilm.view.downloadMovie.V_I_DownloadMovie;
-import com.kingphung.kfilm.view.playMovie.V_I_LoadLinkMovie;
+import com.kingphung.kfilm.view.playMovieOnline.V_I_LoadLinkMovie;
 import com.squareup.picasso.Picasso;
 
 public class V_ShowMovieDetail
@@ -156,6 +156,7 @@ public class V_ShowMovieDetail
         Log.v("PLAY***", url_video);
         Intent intent = new Intent(context, MoviePlayActivity.class);
         Bundle bundle = new Bundle();
+        bundle.putBoolean("IS_PLAY_ONLINE", Constant.ONLINE);
         bundle.putString("URL_VIDEO",url_video);
         bundle.putString("URL_SUB",url_sub);
         intent.putExtras(bundle);

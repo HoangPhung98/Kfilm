@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
@@ -21,13 +22,26 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
 import com.kingphung.kfilm.R;
+import com.kingphung.kfilm.ultils.Constant;
+
+import java.io.File;
 
 public class MoviePlayActivity extends AppCompatActivity {
     //Global vars
     private PlayerView playerView;
     private SimpleExoPlayer simpleExoPlayer;
+
+    private boolean isPlayOnline;
+
+    //link for playing online
     private String link_GGDRIVE;
     private String link_Subtitle;
+
+    //uri for playing offline
+    private String uri_movieFolder;
+    private String uri_movieMP4;
+    private String uri_movieSubtitle;
+
     //Global vars>>>
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,15 +56,43 @@ public class MoviePlayActivity extends AppCompatActivity {
         });
         setFullScreen();
 
+        isPlayOnline = getIntent().getExtras().getBoolean("IS_PLAY_ONLINE");
 
-        link_GGDRIVE = getIntent().getExtras().getString("URL_VIDEO");
-        link_Subtitle = getIntent().getExtras().getString("URL_SUB");
+        if(isPlayOnline == Constant.ONLINE){
+
+            link_GGDRIVE = getIntent().getExtras().getString("URL_VIDEO");
+            link_Subtitle = getIntent().getExtras().getString("URL_SUB");
+            initExo(link_GGDRIVE, link_Subtitle);
+
+        }else{
+
+            uri_movieFolder = getIntent().getExtras().getString("URI_MOVIE_FOLDER");
+            Log.d("KingPhung","--------------" + uri_movieFolder);
+            String folderName = uri_movieFolder.substring(uri_movieFolder.lastIndexOf("/")+1);
+            uri_movieMP4 =
+                    "file://" +
+                    uri_movieFolder +
+                    File.separator +
+                    folderName + Constant.MP4_EXTENSION;
+            uri_movieSubtitle =
+                    "file://" +
+                    uri_movieFolder +
+                    File.separator +
+                    folderName + Constant.SRT_EXTENSION;
+
+            initExo(uri_movieMP4, uri_movieSubtitle);
+        }
+
 
         //Init movie player using "exoplayer" library
-        initExo();
     }
 
-    private void initExo() {
+    private void initExo(String linkVideo, String linkSub) {
+
+        Log.d("KingPhung", "====="+linkVideo);
+        Log.d("KingPhung", "====="+linkSub);
+
+
         playerView = findViewById(R.id.exo_moviePlay);
         simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(this);
         playerView.setPlayer(simpleExoPlayer);
@@ -63,13 +105,13 @@ public class MoviePlayActivity extends AppCompatActivity {
 
         //extract video source and set to array[0]
         MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory).
-                createMediaSource(Uri.parse(link_GGDRIVE));
+                createMediaSource(Uri.parse(linkVideo));
         mediaSourcesArray[0] = videoSource;
 
         //extract subtitle source and set to array[1]
          SingleSampleMediaSource subtitleSource =
                 new SingleSampleMediaSource(
-                        Uri.parse(link_Subtitle),
+                        Uri.parse(linkSub),
                         dataSourceFactory,
                         Format.createTextSampleFormat(null, MimeTypes.TEXT_VTT, Format.NO_VALUE, "vi", null),
                         C.TIME_UNSET);

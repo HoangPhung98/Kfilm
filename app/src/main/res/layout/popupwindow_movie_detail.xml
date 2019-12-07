@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="wrap_content"
+    android:layout_width="280dp"
     android:padding="10dp"
     android:translationZ="20dp"
     android:background="@color/background"
     android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/ivMoviePoster"
-        android:layout_width="match_parent"
+        android:layout_width="260dp"
         android:layout_height="350dp">
     </ImageView>
     <LinearLayout
+        android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
+            android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/textColorr"
             android:id="@+id/tvMovieName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="4"
             android:layout_height="wrap_content"
             android:text="Movie name">
         </TextView>
@@ -29,48 +32,57 @@
             android:textColor="@color/textColorr"
             android:textStyle="bold"
             android:id="@+id/tvIMDB"
-            android:paddingLeft="25dp"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="3"
             android:layout_height="wrap_content"
-            android:text="8/10">
+            android:text="IMDB: 8/10">
         </TextView>
     </LinearLayout>
-    <TextView
-        android:textColor="@color/textColorr"
-        android:id="@+id/tvProductionYear"
-        android:text="Production year"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </TextView>
-    <TextView
-        android:textColor="@color/textColorr"
-        android:id="@+id/tvMovieDirector"
-        android:text="Director"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </TextView>
-    <TextView
-        android:textColor="@color/textColorr"
-        android:maxLines="5"
-        android:textStyle="italic"
-        android:id="@+id/tvMovieDescription"
-        android:text="description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </TextView>
+        android:layout_height="70dp">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
+            <TextView
+                android:textColor="@color/textColorr"
+                android:id="@+id/tvProductionYear"
+                android:text="Production year"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </TextView>
+            <TextView
+                android:textColor="@color/textColorr"
+                android:id="@+id/tvMovieDirector"
+                android:text="Director"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </TextView>
+            <TextView
+                android:textColor="@color/textColorr"
+                android:textStyle="italic"
+                android:id="@+id/tvMovieDescription"
+                android:text="description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </TextView>
+
+        </LinearLayout>
+    </ScrollView>
     <LinearLayout
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="20dp">
         <ImageButton
             android:id="@+id/btCancel"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:src="@drawable/popup_exit"
             android:background="@color/background"
-            android:layout_height="40dp">
+            android:layout_height="match_parent">
         </ImageButton>
         <ImageButton
             android:id="@+id/btDownload"
@@ -78,7 +90,7 @@
             android:layout_width="0dp"
             android:src="@drawable/popup_download"
             android:background="@color/background"
-            android:layout_height="40dp">
+            android:layout_height="match_parent">
         </ImageButton>
         <ImageButton
             android:layout_weight="1"
@@ -86,7 +98,8 @@
             android:layout_width="0dp"
             android:src="@drawable/popup_play"
             android:background="@color/background"
-            android:layout_height="40dp">
+            android:layout_height="match_parent">
         </ImageButton>
     </LinearLayout>
+
 </LinearLayout>

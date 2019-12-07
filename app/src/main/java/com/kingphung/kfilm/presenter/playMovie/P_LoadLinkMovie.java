@@ -5,7 +5,7 @@ import android.content.Context;
 import com.kingphung.kfilm.model.Movie;
 import com.kingphung.kfilm.model.api.API_LoadLinkMovie;
 import com.kingphung.kfilm.presenter.downloadMovie.P_I_DownloadMovie;
-import com.kingphung.kfilm.view.playMovie.V_I_LoadLinkMovie;
+import com.kingphung.kfilm.view.playMovieOnline.V_I_LoadLinkMovie;
 
 public class P_LoadLinkMovie
         implements P_Imp_LoadLinkMovie{
