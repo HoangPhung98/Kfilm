@@ -3,9 +3,6 @@ package com.kingphung.kfilm.model.firebase;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -38,9 +35,10 @@ public class MyFireBase {
 
     public static ArrayList<Movie> getMyListMovie(){
         final ArrayList<Movie> myListMovie = new ArrayList<>();
-        getMyListRef().addValueEventListener(new ValueEventListener() {
+        ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d("KingPhung","onDatachange Listener");
                 myListMovie.clear();
                 for(DataSnapshot i : dataSnapshot.getChildren()){
                     Movie movie = i.getValue(Movie.class);
@@ -52,7 +50,8 @@ public class MyFireBase {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
+        getMyListRef().addValueEventListener(valueEventListener);
         return myListMovie;
     }
 }

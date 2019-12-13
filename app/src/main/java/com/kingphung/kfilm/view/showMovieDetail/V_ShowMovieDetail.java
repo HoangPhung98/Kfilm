@@ -105,14 +105,26 @@ public class V_ShowMovieDetail
         tvMovieDescription.setText(Constant.DESCRIPTION + movie.getDescription());
     }
     private void setOnClick() {
+        //btExit
         btExit.setOnClickListener(this);
-        btDownload.setOnClickListener(this);
+
+        //btDownload
+        if(!MainActivity.listDownloadedMovie.contains(movie))
+            btDownload.setOnClickListener(this);
+        else {
+            btDownload.setImageResource(R.drawable.popup_downloaded);
+            btDownload.setClickable(false);
+        }
+
+        //btAddToMyList
         if(!MainActivity.listMyMovie.contains(movie))
             btAddToMyList.setOnClickListener(this);
         else {
             btAddToMyList.setImageResource(R.drawable.popup_added);
             btAddToMyList.setClickable(false);
         }
+
+        //btPlay
         btPlay.setOnClickListener(this);
     }
 
@@ -204,6 +216,8 @@ public class V_ShowMovieDetail
     @Override
     public void onCompleteDownload(boolean isDownloadSuccessfully, Movie movie) {
         if(isDownloadSuccessfully){
+            MainActivity.listDownloadedMovie.add(movie);
+            btDownload.setImageResource(R.drawable.popup_downloaded);
             Toast.makeText(context, "Download successfully!" + movie.getName(), Toast.LENGTH_LONG).show();
         }else{
 //            Toast.makeText(context, "Download failed!", Toast.LENGTH_LONG).show();

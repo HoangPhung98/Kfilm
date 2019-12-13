@@ -16,6 +16,7 @@ import com.kingphung.kfilm.R;
 import com.kingphung.kfilm.model.Movie;
 import com.kingphung.kfilm.presenter.deleteDownloadedMovie.P_DeleteDownloadedMovie;
 import com.kingphung.kfilm.ultils.Constant;
+import com.kingphung.kfilm.view.activity.MainActivity;
 import com.kingphung.kfilm.view.deleteDownloadedMovie.V_I_DeleteDownloadedMovie;
 import com.kingphung.kfilm.view.playMovieOffline.V_PlayMovieOffline;
 import com.kingphung.kfilm.view.showPopupDeleteDownloadedMovie.V_I_ShowPopupDeleteDownloadedMovie;
@@ -109,6 +110,8 @@ public class DownloadedMovieAdapter extends RecyclerView.Adapter<DownloadedMovie
             Toast.makeText(context, "Delete successfully: "+position, Toast.LENGTH_LONG).show();
             listDownloadedMovie.remove(position);
             notifyDataSetChanged();
+
+            MainActivity.listDownloadedMovie.remove(position);
         }
         else{
             Toast.makeText(context, "Delete failed!: ", Toast.LENGTH_LONG).show();

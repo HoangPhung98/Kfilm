@@ -19,6 +19,7 @@ import com.kingphung.kfilm.R;
 import com.kingphung.kfilm.model.Movie;
 import com.kingphung.kfilm.model.adapter.DownloadedMovieAdapter;
 import com.kingphung.kfilm.presenter.readDownloadedMoviesFromSQLite.P_ReadSQLite;
+import com.kingphung.kfilm.view.activity.MainActivity;
 import com.kingphung.kfilm.view.readSQLite.V_I_ReadSQLite;
 
 import java.util.ArrayList;
@@ -67,8 +68,14 @@ public class DownloadFragment extends Fragment
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
 
-        P_ReadSQLite p_readSQLite = new P_ReadSQLite(context, this);
-        p_readSQLite.read();
+        listDownloadedMovie = new ArrayList<>();
+        listDownloadedMovie.addAll(MainActivity.listDownloadedMovie);
+        downloadedMovieAdapter = new DownloadedMovieAdapter(context, listDownloadedMovie);
+        Log.d("KingPhung",listDownloadedMovie.size()+"");
+        recyclerView.setAdapter(downloadedMovieAdapter);
+
+//        P_ReadSQLite p_readSQLite = new P_ReadSQLite(context, this);
+//        p_readSQLite.read();
         return view;
     }
 

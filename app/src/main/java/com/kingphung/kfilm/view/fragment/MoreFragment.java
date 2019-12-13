@@ -30,20 +30,25 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.kingphung.kfilm.R;
+import com.kingphung.kfilm.model.Movie;
 import com.kingphung.kfilm.model.adapter.MovieAdapter;
 import com.kingphung.kfilm.model.firebase.MyFireBase;
+import com.kingphung.kfilm.presenter.updateMyListMovie.P_UpdateMyListMovie;
 import com.kingphung.kfilm.view.activity.MainActivity;
 import com.kingphung.kfilm.view.showPopupLogout.V_I_ShowPopupLogout;
 import com.kingphung.kfilm.view.showPopupLogout.V_ShowPopupLogout;
+import com.kingphung.kfilm.view.updateMyListMovie.V_I_UpdateMyListMovie;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static android.app.Activity.RESULT_OK;
 
 public class MoreFragment extends Fragment
-    implements V_I_ShowPopupLogout {
+    implements V_I_ShowPopupLogout,
+        V_I_UpdateMyListMovie {
 
     //UI
     CircularImageView ivUser;
@@ -179,15 +184,16 @@ public class MoreFragment extends Fragment
     }
 
     private void updateUIOfLoggedInUser() {
-
         layoutLogin.setVisibility(View.GONE);
         user = FirebaseAuth.getInstance().getCurrentUser();
         Picasso.get().load(user.getPhotoUrl()).into(ivUser);
         tvUserName.setText(user.getDisplayName());
         tvEmail.setText(user.getEmail());
-        movieAdapter = new MovieAdapter(MainActivity.listMyMovie, context);
-        recycler_listMyMovie.setAdapter(movieAdapter);
-
+        if(movieAdapter == null) {
+            movieAdapter = new MovieAdapter(MainActivity.listMyMovie, context);
+            recycler_listMyMovie.setAdapter(movieAdapter);
+        }
+        movieAdapter.notifyDataSetChanged();
     }
 
     private void updateUIOfLoggedOut(){
@@ -199,21 +205,27 @@ public class MoreFragment extends Fragment
     }
 
     private void updateMyListLoggedIn(){
-        movieAdapter.notifyDataSetChanged();
 
+        P_UpdateMyListMovie p_updateMyListMovie = new P_UpdateMyListMovie(this);
+        p_updateMyListMovie.update();
+
+    }
+
+    @Override
+    public void onCompleteUpdateMyListMovie(ArrayList<Movie> myListMovie) {
         MainActivity.listMyMovie.clear();
-        movieAdapter.notifyDataSetChanged();
-
-        MainActivity.listMyMovie = MyFireBase.getMyListMovie();
+        MainActivity.listMyMovie.addAll(myListMovie);
+//        movieAdapter = new MovieAdapter(myListMovie, context);
         Log.d("KingPhung","SIZE: "+MainActivity.listMyMovie.size());
         movieAdapter.notifyDataSetChanged();
+
     }
 
     private void updateLoggedIn(){
-        updateUIOfLoggedInUser();
         updateMyListLoggedIn();
         user = FirebaseAuth.getInstance().getCurrentUser();
         isLoggedIn = true;
+        updateUIOfLoggedInUser();
     }
     private void updateLoggedOut(){
         updateUIOfLoggedOut();
@@ -248,6 +260,8 @@ public class MoreFragment extends Fragment
         super.onDetach();
         mListener = null;
     }
+
+
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name

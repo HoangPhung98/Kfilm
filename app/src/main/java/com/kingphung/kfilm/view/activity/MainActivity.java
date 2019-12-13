@@ -20,10 +20,12 @@ import com.kingphung.kfilm.model.Movie;
 import com.kingphung.kfilm.model.adapter.CategoryAdapter;
 import com.kingphung.kfilm.R;
 import com.kingphung.kfilm.model.firebase.MyFireBase;
+import com.kingphung.kfilm.presenter.readDownloadedMoviesFromSQLite.P_ReadSQLite;
 import com.kingphung.kfilm.presenter.showListCategory.P_ShowListMovie;
 import com.kingphung.kfilm.view.fragment.DownloadFragment;
 import com.kingphung.kfilm.view.fragment.MoreFragment;
 import com.kingphung.kfilm.view.fragment.SearchFragment;
+import com.kingphung.kfilm.view.readSQLite.V_I_ReadSQLite;
 import com.kingphung.kfilm.view.showListCategory.V_ShowListMovie;
 import com.kingphung.kfilm.view.showMovieDetail.V_ShowMovieDetail;
 
@@ -36,15 +38,18 @@ public class MainActivity extends AppCompatActivity
         implements SearchFragment.OnFragmentInteractionListener,
                     MoreFragment.OnFragmentInteractionListener,
                     DownloadFragment.OnFragmentInteractionListener,
-                    V_ShowListMovie {
+                    V_ShowListMovie,
+                    V_I_ReadSQLite {
 
     //Global variables
     public static ArrayList<Movie> listAllMovie;
     public static ArrayList<Movie> listMyMovie;
+    public static ArrayList<Movie> listDownloadedMovie;
     RecyclerView recycler_listCategory;
     CategoryAdapter categoryAdapter;
     BottomNavigationView bottomNavigationView;
     P_ShowListMovie p_showListMovie;
+    P_ReadSQLite p_readSQLite;
 
     private boolean isAdapterSeted = false;
     //Global variables>>>
@@ -63,9 +68,15 @@ public class MainActivity extends AppCompatActivity
         p_showListMovie = new P_ShowListMovie(this, MainActivity.this, categoryAdapter);
         p_showListMovie.showListMovie();
 
+
+        //read my list movie
         if(MyFireBase.checkLoggedIn()){
             listMyMovie = MyFireBase.getMyListMovie();
         }
+
+        //read listDownloaded movie
+        p_readSQLite = new P_ReadSQLite(this, this);
+        p_readSQLite.read();
     }
     private void initUI(){
         //<create recycler view to show list movie categories
@@ -139,5 +150,10 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("KingPhung","result in activity");
+    }
+
+    @Override
+    public void onCompleteReadSQLite(ArrayList<Movie> listDownloadedMovie) {
+        this.listDownloadedMovie = listDownloadedMovie;
     }
 }
