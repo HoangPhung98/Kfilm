@@ -9,11 +9,13 @@ import com.kingphung.kfilm.view.deleteDownloadedMovie.V_I_DeleteDownloadedMovie;
 public class P_DeleteDownloadedMovie implements P_I_DeleteDownloadedMovie{
     Context context;
     V_I_DeleteDownloadedMovie v_i_deleteDownloadedMovie;
+    int position;
     String movieName;
 
-    public P_DeleteDownloadedMovie(Context context, V_I_DeleteDownloadedMovie v_i_deleteDownloadedMovie, String movieName){
+    public P_DeleteDownloadedMovie(Context context, V_I_DeleteDownloadedMovie v_i_deleteDownloadedMovie, int position, String movieName){
         this.context = context;
         this.v_i_deleteDownloadedMovie = v_i_deleteDownloadedMovie;
+        this.position = position;
         this.movieName = movieName;
     }
 
@@ -32,19 +34,19 @@ public class P_DeleteDownloadedMovie implements P_I_DeleteDownloadedMovie{
     public void onCompleteDeleteFromExternalStorage(boolean isDeleteSuccessfully) {
         if(isDeleteSuccessfully) deleteFromSqlite();
         else{
-            v_i_deleteDownloadedMovie.onCompleteDeleteDownloadedMovie(false, -1);
+            v_i_deleteDownloadedMovie.onCompleteDeleteDownloadedMovie(false, -1, 0);
         }
     }
 
     private void deleteFromSqlite() {
         M_DeleteDownloadedMovieFromSQLite m_deleteDownloadedMovieFromSQLite
-                = new M_DeleteDownloadedMovieFromSQLite(context, this, movieName);
+                = new M_DeleteDownloadedMovieFromSQLite(context, this, position, movieName);
         m_deleteDownloadedMovieFromSQLite.delete();
     }
 
     @Override
-    public void onCompleteDeleteFromSQLite(boolean isDeleteSuccessfully, int position) {
-        v_i_deleteDownloadedMovie.onCompleteDeleteDownloadedMovie(isDeleteSuccessfully, position);
+    public void onCompleteDeleteFromSQLite(boolean isDeleteSuccessfully, int position, int numRows) {
+        v_i_deleteDownloadedMovie.onCompleteDeleteDownloadedMovie(isDeleteSuccessfully, position, numRows);
     }
 
 

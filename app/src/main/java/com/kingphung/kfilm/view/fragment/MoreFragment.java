@@ -1,74 +1,228 @@
 package com.kingphung.kfilm.view.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.kingphung.kfilm.R;
+import com.kingphung.kfilm.model.adapter.MovieAdapter;
+import com.kingphung.kfilm.model.firebase.MyFireBase;
+import com.kingphung.kfilm.view.activity.MainActivity;
+import com.kingphung.kfilm.view.showPopupLogout.V_I_ShowPopupLogout;
+import com.kingphung.kfilm.view.showPopupLogout.V_ShowPopupLogout;
+import com.mikhaellopez.circularimageview.CircularImageView;
+import com.squareup.picasso.Picasso;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MoreFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MoreFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class MoreFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import java.util.Arrays;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+import static android.app.Activity.RESULT_OK;
 
+public class MoreFragment extends Fragment
+    implements V_I_ShowPopupLogout {
+
+    //UI
+    CircularImageView ivUser;
+    TextView tvUserName, tvEmail;
+    Button btMyList, btLogin;
+    FloatingActionButton fabLogout;
+
+    RecyclerView recycler_listMyMovie;
+    MovieAdapter movieAdapter;
+    Context context;
+
+    //Firebase
+    private FirebaseAuth firebaseAuth;
+    private boolean isLoggedIn;
+    private FirebaseUser user;
+    //login
+    private final int RC_LOGIN = 25;
+    LinearLayout layoutLogin;
     private OnFragmentInteractionListener mListener;
 
     public MoreFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MoreFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MoreFragment newInstance(String param1, String param2) {
-        MoreFragment fragment = new MoreFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        firebaseAuth = FirebaseAuth.getInstance();
+        if(firebaseAuth.getCurrentUser() != null) {
+            isLoggedIn = true;
+            user = firebaseAuth.getCurrentUser();
         }
+        Toast.makeText(context, isLoggedIn+"", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_more, container, false);
+        View view = inflater.inflate(R.layout.fragment_more, container, false);
+        //login UI
+        layoutLogin = view.findViewById(R.id.layoutLogin);
+        btLogin = view.findViewById(R.id.btLogin);
+        setListenerLogIn();
+
+        //logged-in UI
+        ivUser = view.findViewById(R.id.ivUser);
+        tvUserName = view.findViewById(R.id.tvUserName);
+        tvEmail = view.findViewById(R.id.tvEmail);
+        btMyList = view.findViewById(R.id.btMyList);
+        fabLogout = view.findViewById(R.id.fab_logout);
+        recycler_listMyMovie = view.findViewById(R.id.recycler_myList);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        recycler_listMyMovie.setLayoutManager(linearLayoutManager);
+        recycler_listMyMovie.setHasFixedSize(true);
+        setListenerLoggedIn();
+
+        if(isLoggedIn == false) {
+            layoutLogin.setVisibility(View.VISIBLE);
+        }else{
+            updateUIOfLoggedInUser();
+        }
+
+        return view;
     }
+
+    private void setListenerLogIn() {
+        btLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("KingPhung","Click login");
+                startActivityForResult(
+                        AuthUI.getInstance().createSignInIntentBuilder()
+                                .setAvailableProviders(
+                                        Arrays.asList(
+                                                new AuthUI.IdpConfig.GoogleBuilder().build()
+                                        )
+                                )
+                                .build(), RC_LOGIN
+
+                );
+            }
+        });
+    }
+    private void setListenerLoggedIn() {
+        fabLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                V_ShowPopupLogout v_showPopupLogout = new V_ShowPopupLogout(context, getV_I_ShowPopupLogout(), user.getDisplayName(), user.getPhotoUrl().toString());
+                v_showPopupLogout.show();
+            }
+        });
+    }
+    private V_I_ShowPopupLogout getV_I_ShowPopupLogout(){return this;}
+
+    @Override
+    public void onCompleteSeleted(boolean isWantToLogout) {
+        if(isWantToLogout){
+            AuthUI.getInstance().signOut(context).
+                    addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText( context, "Bye", Toast.LENGTH_SHORT).show();
+                            Log.d("KingPhung","Logged out");
+                            updateLoggedOut();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("KingPhung=======error: ",e.toString());
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("KingPhung","******Resulted");
+        if(requestCode == RC_LOGIN && data!= null){
+            IdpResponse response = IdpResponse.fromResultIntent(data);
+            if(resultCode == RESULT_OK){
+                Log.d("KingPhung", response.getEmail()+"");
+                updateLoggedIn();
+            }else{
+                Log.d("KingPhung", response.getError()+"");
+                Toast.makeText(context, "error: " + resultCode+"", Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            Toast.makeText(context, "Some error, pls try again!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateUIOfLoggedInUser() {
+
+        layoutLogin.setVisibility(View.GONE);
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        Picasso.get().load(user.getPhotoUrl()).into(ivUser);
+        tvUserName.setText(user.getDisplayName());
+        tvEmail.setText(user.getEmail());
+        movieAdapter = new MovieAdapter(MainActivity.listMyMovie, context);
+        recycler_listMyMovie.setAdapter(movieAdapter);
+
+    }
+
+    private void updateUIOfLoggedOut(){
+        layoutLogin.setVisibility(View.VISIBLE);
+    }
+
+    private void updateMyListLoggedOut() {
+        MainActivity.listMyMovie.clear();
+    }
+
+    private void updateMyListLoggedIn(){
+        movieAdapter.notifyDataSetChanged();
+
+        MainActivity.listMyMovie.clear();
+        movieAdapter.notifyDataSetChanged();
+
+        MainActivity.listMyMovie = MyFireBase.getMyListMovie();
+        Log.d("KingPhung","SIZE: "+MainActivity.listMyMovie.size());
+        movieAdapter.notifyDataSetChanged();
+    }
+
+    private void updateLoggedIn(){
+        updateUIOfLoggedInUser();
+        updateMyListLoggedIn();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        isLoggedIn = true;
+    }
+    private void updateLoggedOut(){
+        updateUIOfLoggedOut();
+        updateMyListLoggedOut();
+        user = null;
+        isLoggedIn = false;
+    }
+
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -82,6 +236,7 @@ public class MoreFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            this.context = context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -94,16 +249,6 @@ public class MoreFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

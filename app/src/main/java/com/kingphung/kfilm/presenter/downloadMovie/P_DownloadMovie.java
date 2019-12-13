@@ -29,22 +29,23 @@ public class P_DownloadMovie
         P_LoadLinkMovie p_loadLinkMovie = new P_LoadLinkMovie(movie.getId(), context, this);
         p_loadLinkMovie.load();
     }
-
     @Override
-    public void onCompleteDownloadMovie(boolean isDownloadSuccessfully, Movie movie) {
-        v_i_downloadMovie.onCompleteDownload(isDownloadSuccessfully, movie);
-        M_UpdateSqliteDatabase m_updateSqliteDatabase = new M_UpdateSqliteDatabase(context, movie, this);
-        m_updateSqliteDatabase.update();
+    public void onCompleteLoadLink(String url_video, String url_sub) {
+        downloadMovieFromUrl(url_video, url_sub);
     }
-
     private void downloadMovieFromUrl(String url_video, String url_sub) {
         M_DownloadMovie m_downloadMovie = new M_DownloadMovie(movie, url_video, url_sub, this);
         m_downloadMovie.startDownload();
     }
     @Override
-    public void onCompleteLoadLink(String url_video, String url_sub) {
-        downloadMovieFromUrl(url_video, url_sub);
+    public void onCompleteDownloadMovie(boolean isDownloadSuccessfully, Movie movie, String size) {
+        v_i_downloadMovie.onCompleteDownload(isDownloadSuccessfully, movie);
+        if(isDownloadSuccessfully){
+            M_UpdateSqliteDatabase m_updateSqliteDatabase = new M_UpdateSqliteDatabase(context, movie, this, size);
+            m_updateSqliteDatabase.insert();
+        }
     }
+
 
     @Override
     public void onCompleteUpdateSqliteDatabase(boolean isUpdateSqliteSuccessfully) {

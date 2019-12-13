@@ -1,6 +1,7 @@
 package com.kingphung.kfilm.model.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,8 +43,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             public void onClick(View v) {
                     showMovieDetail(listMovie.get(position), context);
             }
-
-
         });
         //map a movie picture to the item of a sub/listMovie recycler view
         Picasso.get().load(listMovie.get(position).getImg_url()).into(holder.imgMovie);

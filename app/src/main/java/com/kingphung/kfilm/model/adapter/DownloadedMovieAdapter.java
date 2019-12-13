@@ -52,17 +52,20 @@ public class DownloadedMovieAdapter extends RecyclerView.Adapter<DownloadedMovie
         holder.tvMovieDirector.setText(Constant.DIRECTOR + listDownloadedMovie.get(position).getDirector());
         holder.tvMovieProductionYear.setText(Constant.YEAR + listDownloadedMovie.get(position).getProduct_year());
         holder.tvMovieDescription.setText(Constant.DESCRIPTION + listDownloadedMovie.get(position).getDescription());
+        holder.tvSize.setText(listDownloadedMovie.get(position).getSize()+" MB");
 
-        final String uri_movieFolder = Environment.getExternalStorageDirectory()+
-                File.separator +
-                "Kfilm" +
-                File.separator +
-                listDownloadedMovie.get(position).getName();
+//        final String uri_movieFolder = Environment.getExternalStorageDirectory()+
+//                File.separator +
+//                "Kfilm" +
+//                File.separator +
+//                listDownloadedMovie.get(position).getName();
+        final String uri_movieFolder = Constant.EXTERNAL_STORAGE_PATH + listDownloadedMovie.get(position).getName();
         final String uri_moviePoster =
                 uri_movieFolder +
                 File.separator +
                 listDownloadedMovie.get(position).getName() +
                 Constant.JPEG_EXTENSION;
+
         Log.d("KingPhung", uri_moviePoster+"===============");
         Picasso.get().load("file://"+uri_moviePoster).into(holder.ivMoviePoster);
 
@@ -70,7 +73,8 @@ public class DownloadedMovieAdapter extends RecyclerView.Adapter<DownloadedMovie
             @Override
             public void onClick(View v) {
                 //play this from local
-                playMovie(context, uri_movieFolder);
+                Log.d("KingPhung","pos click : "+listDownloadedMovie.get(position).getCurrentPosition());
+                playMovie(context, uri_movieFolder, listDownloadedMovie.get(position));
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -90,19 +94,19 @@ public class DownloadedMovieAdapter extends RecyclerView.Adapter<DownloadedMovie
     @Override
     public void onCompleteSelected(boolean wantToDelete, int position, String movieName) {
         if(wantToDelete){
-            deleteDownloadedMovie(movieName);
+            deleteDownloadedMovie(position, movieName);
         }
     }
 
-    private void deleteDownloadedMovie(String movieName) {
-        P_DeleteDownloadedMovie p_deleteDownloadedMovie = new P_DeleteDownloadedMovie(context, this, movieName);
+    private void deleteDownloadedMovie(int position, String movieName) {
+        P_DeleteDownloadedMovie p_deleteDownloadedMovie = new P_DeleteDownloadedMovie(context, this, position, movieName);
         p_deleteDownloadedMovie.delete();
     }
 
     @Override
-    public void onCompleteDeleteDownloadedMovie(boolean isDeleteSuccessfully, int position) {
+    public void onCompleteDeleteDownloadedMovie(boolean isDeleteSuccessfully, int position, int numRows) {
         if(isDeleteSuccessfully) {
-            Toast.makeText(context, "Delete successfully: ", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Delete successfully: "+position, Toast.LENGTH_LONG).show();
             listDownloadedMovie.remove(position);
             notifyDataSetChanged();
         }
@@ -117,12 +121,10 @@ public class DownloadedMovieAdapter extends RecyclerView.Adapter<DownloadedMovie
         return listDownloadedMovie.size();
     }
 
-    private void playMovie(Context context, String uri_movieFolder){
-        V_PlayMovieOffline v_playMovieOffline = new V_PlayMovieOffline(context, uri_movieFolder);
+    private void playMovie(Context context, String uri_movieFolder, Movie movie){
+        V_PlayMovieOffline v_playMovieOffline = new V_PlayMovieOffline(context, uri_movieFolder, movie);
         v_playMovieOffline.play();
     }
-
-
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView ivMoviePoster;

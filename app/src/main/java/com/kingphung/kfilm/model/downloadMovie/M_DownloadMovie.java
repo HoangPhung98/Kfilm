@@ -17,8 +17,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.text.DecimalFormat;
 
 public class M_DownloadMovie {
     //for debug
@@ -43,7 +42,7 @@ public class M_DownloadMovie {
     private class DownloadMovieAsyncTask extends AsyncTask<String, String, String>{
 
         private String fileName;
-        private String folderName;
+        private String folderNameKfilm, folderNameMovie;
         private boolean isDownloadSuccessfully;
         private String typeOfExtension;
 
@@ -56,7 +55,7 @@ public class M_DownloadMovie {
         protected String doInBackground(String... strings) {
             int count;
             long total;
-            int lengthOfFile;
+            float lengthOfFile = 0;
 
             try {
                 //set up url
@@ -75,21 +74,29 @@ public class M_DownloadMovie {
                 fileName = concateFileExtension(fileName, typeOfExtension);
 
                 //create folder name
-                folderName = Environment.getExternalStorageDirectory()+
-                            File.separator +
-                            "Kfilm" +
-                            File.separator +
-                            movie.getName() +
-                            File.separator;
+//                folderName = Environment.getExternalStorageDirectory()+
+//                            File.separator +
+//                            "Kfilm" +
+//                            File.separator +
+//                            movie.getName() +
+//                            File.separator;
 
                 //create folder Kfilm if not exist
-                File folderDir = new File(folderName);
-                if(!folderDir.exists()){
-                    folderDir.mkdir();
+                folderNameKfilm = Constant.EXTERNAL_STORAGE_PATH;
+                File folderDirKfilm = new File(folderNameKfilm);
+                if(!folderDirKfilm.exists()){
+                    folderDirKfilm.mkdir();
+                }
+
+                //create folder Kfilm/John Wick/
+                folderNameMovie = folderNameKfilm + movie.getName() +"/";
+                File folderDirMovie = new File(folderNameMovie);
+                if(!folderDirMovie.exists()){
+                    folderDirMovie.mkdir();
                 }
 
                 //output stream  to write data to device
-                OutputStream outToWrite = new FileOutputStream(folderName + fileName);
+                OutputStream outToWrite = new FileOutputStream(folderNameMovie + fileName);
                 total = 0;
                 byte data[] = new byte[1024];
 
@@ -105,9 +112,9 @@ public class M_DownloadMovie {
             } catch (Exception e) {
                 e.printStackTrace();
                 this.isDownloadSuccessfully = false;
-                p_i_downloadMovie.onCompleteDownloadMovie(isDownloadSuccessfully, movie);
+                p_i_downloadMovie.onCompleteDownloadMovie(isDownloadSuccessfully, movie, "0");
             }
-            return folderName;
+            return new DecimalFormat("####.##").format(lengthOfFile/(2<<20))+"";
         }
 
         @Override
@@ -119,7 +126,7 @@ public class M_DownloadMovie {
         protected void onPostExecute(String s) {
             if(typeOfExtension == Constant.MP4_EXTENSION){
                 this.isDownloadSuccessfully = true;
-                p_i_downloadMovie.onCompleteDownloadMovie(isDownloadSuccessfully, movie);
+                p_i_downloadMovie.onCompleteDownloadMovie(isDownloadSuccessfully, movie, s);
             }
         }
         private String concateFileExtension(String fileName, String typeOfExtension){

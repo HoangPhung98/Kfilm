@@ -15,6 +15,8 @@ public class Constant {
     public static final String COLUMN_DIRECTOR = "DIRECTOR";
     public static final String COLUMN_PRODUCTION_YEAR = "PRODUCTION_YEAR";
     public static final String COLUMN_DESCRIPTION = "DESCRIPTION";
+    public static final String COLUMN_SIZE = "SIZE";
+    public static final String COLUMN_CURRENT_POSITION = "CURRENT_POSITION";
 
     //type of file extension
     public static final String MP4_EXTENSION = ".mp4";
@@ -24,4 +26,10 @@ public class Constant {
     //flag put through intent to play movie
     public static final boolean ONLINE = true;
     public static final boolean OFFLINE = false;
+
+    //firebase
+    public static String myListRef = "myList";
+
+    //external storage
+    public static String EXTERNAL_STORAGE_PATH = "/storage/self/primary/Kfilm/";
 }

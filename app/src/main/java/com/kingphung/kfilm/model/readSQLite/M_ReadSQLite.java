@@ -40,7 +40,9 @@ public class M_ReadSQLite {
                     cursor.getString(cursor.getColumnIndex(Constant.COLUMN_IMDB)),
                     "",
                     cursor.getString(cursor.getColumnIndex(Constant.COLUMN_DESCRIPTION)),
-                    cursor.getString(cursor.getColumnIndex(Constant.COLUMN_DIRECTOR))
+                    cursor.getString(cursor.getColumnIndex(Constant.COLUMN_DIRECTOR)),
+                    cursor.getString(cursor.getColumnIndex(Constant.COLUMN_SIZE)),
+                    cursor.getString(cursor.getColumnIndex(Constant.COLUMN_CURRENT_POSITION))
                     );
             listDownloadedMovie.add(movie);
         }

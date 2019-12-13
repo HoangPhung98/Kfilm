@@ -1,25 +1,31 @@
 package com.kingphung.kfilm.view.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.kingphung.kfilm.model.Category;
 import com.kingphung.kfilm.model.Movie;
 import com.kingphung.kfilm.model.adapter.CategoryAdapter;
 import com.kingphung.kfilm.R;
+import com.kingphung.kfilm.model.firebase.MyFireBase;
 import com.kingphung.kfilm.presenter.showListCategory.P_ShowListMovie;
 import com.kingphung.kfilm.view.fragment.DownloadFragment;
 import com.kingphung.kfilm.view.fragment.MoreFragment;
 import com.kingphung.kfilm.view.fragment.SearchFragment;
 import com.kingphung.kfilm.view.showListCategory.V_ShowListMovie;
+import com.kingphung.kfilm.view.showMovieDetail.V_ShowMovieDetail;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,6 +40,7 @@ public class MainActivity extends AppCompatActivity
 
     //Global variables
     public static ArrayList<Movie> listAllMovie;
+    public static ArrayList<Movie> listMyMovie;
     RecyclerView recycler_listCategory;
     CategoryAdapter categoryAdapter;
     BottomNavigationView bottomNavigationView;
@@ -49,10 +56,16 @@ public class MainActivity extends AppCompatActivity
 
         //listAllMovie is used for search fragment
         listAllMovie = new ArrayList<>();
+        listMyMovie = new ArrayList<>();
+
         initUI();
 
         p_showListMovie = new P_ShowListMovie(this, MainActivity.this, categoryAdapter);
         p_showListMovie.showListMovie();
+
+        if(MyFireBase.checkLoggedIn()){
+            listMyMovie = MyFireBase.getMyListMovie();
+        }
     }
     private void initUI(){
         //<create recycler view to show list movie categories
@@ -109,10 +122,22 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void showList(CategoryAdapter categoryAdapter) {
-        if(!isAdapterSeted) recycler_listCategory.setAdapter(categoryAdapter);
+        if(!isAdapterSeted) {
+            recycler_listCategory.setAdapter(categoryAdapter);
+        }
         else {
             categoryAdapter.notifyDataSetChanged();
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("KingPhung","result in activity");
+    }
 }

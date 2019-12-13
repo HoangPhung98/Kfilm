@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="280dp"
-    android:padding="10dp"
+    android:paddingTop="10dp"
     android:translationZ="20dp"
     android:background="@color/background"
     android:layout_height="wrap_content">
@@ -12,6 +12,7 @@
         android:layout_height="350dp">
     </ImageView>
     <LinearLayout
+        android:paddingLeft="10dp"
         android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -28,7 +29,7 @@
         </TextView>
         <TextView
             android:gravity="right"
-            android:paddingRight="15dp"
+            android:paddingRight="10dp"
             android:textColor="@color/textColorr"
             android:textStyle="bold"
             android:id="@+id/tvIMDB"
@@ -47,6 +48,7 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:paddingLeft="10dp"
                 android:textColor="@color/textColorr"
                 android:id="@+id/tvProductionYear"
                 android:text="Production year"
@@ -54,6 +56,7 @@
                 android:layout_height="wrap_content">
             </TextView>
             <TextView
+                android:paddingLeft="10dp"
                 android:textColor="@color/textColorr"
                 android:id="@+id/tvMovieDirector"
                 android:text="Director"
@@ -61,6 +64,7 @@
                 android:layout_height="wrap_content">
             </TextView>
             <TextView
+                android:paddingLeft="10dp"
                 android:textColor="@color/textColorr"
                 android:textStyle="italic"
                 android:id="@+id/tvMovieDescription"
@@ -75,7 +79,7 @@
         android:layout_marginTop="5dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="20dp">
+        android:layout_height="wrap_content">
         <ImageButton
             android:id="@+id/btCancel"
             android:layout_width="0dp"
@@ -88,7 +92,17 @@
             android:id="@+id/btDownload"
             android:layout_weight="1"
             android:layout_width="0dp"
+            android:scaleType="fitCenter"
             android:src="@drawable/popup_download"
+            android:background="@color/background"
+            android:layout_height="match_parent">
+        </ImageButton>
+        <ImageButton
+            android:id="@+id/btAddToMyList"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:scaleType="center"
+            android:src="@drawable/popup_add_to_my_list"
             android:background="@color/background"
             android:layout_height="match_parent">
         </ImageButton>

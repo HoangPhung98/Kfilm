@@ -12,12 +12,14 @@ public class M_UpdateSqliteDatabase {
     Context context;
     Movie movie;
     P_I_UpdateSqliteDatabase p_i_updateSqliteDatabase;
-    public M_UpdateSqliteDatabase(Context context, Movie movie, P_I_UpdateSqliteDatabase p_i_updateSqliteDatabase){
+    String size;
+    public M_UpdateSqliteDatabase(Context context, Movie movie, P_I_UpdateSqliteDatabase p_i_updateSqliteDatabase, String size){
         this.context = context;
         this.movie = movie;
         this.p_i_updateSqliteDatabase = p_i_updateSqliteDatabase;
+        this.size = size;
     }
-    public void update(){
+    public void insert(){
         DownloadedMovieDBHelper downloadedMovieDBHelper = new DownloadedMovieDBHelper(context);
         SQLiteDatabase db = downloadedMovieDBHelper.getWritableDatabase();
 
@@ -27,8 +29,11 @@ public class M_UpdateSqliteDatabase {
         values.put(Constant.COLUMN_DIRECTOR, movie.getDirector());
         values.put(Constant.COLUMN_PRODUCTION_YEAR, movie.getProduct_year());
         values.put(Constant.COLUMN_DESCRIPTION, movie.getDescription());
+        values.put(Constant.COLUMN_SIZE, size);
+        values.put(Constant.COLUMN_CURRENT_POSITION, "0");
 
         long rowID = db.insert(Constant.DB_TABLE_NAME, null, values);
         p_i_updateSqliteDatabase.onCompleteUpdateSqliteDatabase(true);
     }
+
 }

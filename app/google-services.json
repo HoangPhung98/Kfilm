@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "512086368090",
+    "firebase_url": "https://kfilm-f9ade.firebaseio.com",
+    "project_id": "kfilm-f9ade",
+    "storage_bucket": "kfilm-f9ade.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:512086368090:android:b4a19951194cf496c99d63",
+        "android_client_info": {
+          "package_name": "com.kingphung.kfilm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "512086368090-fp0lim8unj1m2ii92adc68c30iur2mel.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kingphung.kfilm",
+            "certificate_hash": "8aded3cb8d9aee7be896d48842f752c52318ae6a"
+          }
+        },
+        {
+          "client_id": "512086368090-fu0dke9kp2a34mk9eoieooht017njivp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBH6k4rxPlvtidpXyXCy_aGuhzcDbk7-LQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "512086368090-fu0dke9kp2a34mk9eoieooht017njivp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

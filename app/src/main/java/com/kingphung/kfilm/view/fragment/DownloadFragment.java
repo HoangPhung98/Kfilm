@@ -1,6 +1,7 @@
 package com.kingphung.kfilm.view.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -36,7 +37,8 @@ public class DownloadFragment extends Fragment
     private OnFragmentInteractionListener mListener;
 
     private DownloadedMovieAdapter downloadedMovieAdapter;
-    private ArrayList<Movie> listDownloadedMovie;
+    public static ArrayList<Movie> listDownloadedMovie;
+    public static Movie movie;
     private Context context;
 
     RecyclerView recyclerView;
@@ -46,14 +48,6 @@ public class DownloadFragment extends Fragment
         this.listDownloadedMovie = listDownloadedMovie;
     }
 
-//    public static DownloadFragment newInstance(ArrayList<Movie> listDownloadedMovie, Context context) {
-//        DownloadFragment fragment = new DownloadFragment();
-////        Bundle args = new Bundle();
-////        args.putString(ARG_PARAM1, param1);
-////        args.putString(ARG_PARAM2, param2);
-////        fragment.setArguments(args);
-//        return fragment;
-//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,7 +98,8 @@ public class DownloadFragment extends Fragment
     }
 
     @Override
-    public void onCompleteReadSQLite(ArrayList<Movie> listDownloadedMovie) {
+    public void onCompleteReadSQLite(ArrayList<Movie> listDownloadedMovie2) {
+        listDownloadedMovie = listDownloadedMovie2;
         downloadedMovieAdapter = new DownloadedMovieAdapter(context, listDownloadedMovie);
         Log.d("KingPhung",listDownloadedMovie.size()+"");
         recyclerView.setAdapter(downloadedMovieAdapter);

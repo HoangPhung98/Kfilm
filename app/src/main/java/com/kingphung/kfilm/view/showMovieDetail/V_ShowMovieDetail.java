@@ -17,11 +17,15 @@ import android.widget.Toast;
 
 import com.kingphung.kfilm.R;
 import com.kingphung.kfilm.model.Movie;
+import com.kingphung.kfilm.model.firebase.MyFireBase;
+import com.kingphung.kfilm.presenter.addToMyList.P_AddToMyList;
 import com.kingphung.kfilm.presenter.downloadMovie.P_CheckWriteExternalPermission;
 import com.kingphung.kfilm.presenter.downloadMovie.P_DownloadMovie;
 import com.kingphung.kfilm.presenter.playMovie.P_LoadLinkMovie;
 import com.kingphung.kfilm.ultils.Constant;
+import com.kingphung.kfilm.view.activity.MainActivity;
 import com.kingphung.kfilm.view.activity.MoviePlayActivity;
+import com.kingphung.kfilm.view.addToMyList.V_I_AddToMyList;
 import com.kingphung.kfilm.view.downloadMovie.V_I_CheckWriteExternalPermission;
 import com.kingphung.kfilm.view.downloadMovie.V_I_DownloadMovie;
 import com.kingphung.kfilm.view.playMovieOnline.V_I_LoadLinkMovie;
@@ -31,16 +35,19 @@ public class V_ShowMovieDetail
         implements View.OnClickListener,
         V_I_LoadLinkMovie,
         V_I_DownloadMovie,
-        V_I_CheckWriteExternalPermission {
+        V_I_CheckWriteExternalPermission,
+        V_I_AddToMyList {
 
-    Movie movie;
+    public static Movie movie;
+    public static int RC_PLAYMOVIE = 26;
+
     Context context;
 
     //UI
     PopupWindow popupWindow;
     ImageView ivMoviePoster;
     TextView tvMovieName, tvMovieIMDB, tvMovieProductionYear, tvMovieDirector, tvMovieDescription;
-    ImageButton btExit, btDownload, btPlay;
+    ImageButton btExit, btDownload,btAddToMyList, btPlay;
     public V_ShowMovieDetail(Movie movie, Context context){
         this.movie = movie;
         this.context = context;
@@ -52,9 +59,6 @@ public class V_ShowMovieDetail
         mapDataToUI();
         setOnClick();
     }
-
-
-
     private void initUI(){
         LayoutInflater inflater = LayoutInflater.from(context);
         View viewLayoutPopupWindowMovieDetail = inflater.inflate(R.layout.popupwindow_movie_detail, null);
@@ -73,6 +77,7 @@ public class V_ShowMovieDetail
 
         btExit = viewLayoutPopupWindowMovieDetail.findViewById(R.id.btCancel);
         btDownload = viewLayoutPopupWindowMovieDetail.findViewById(R.id.btDownload);
+        btAddToMyList = viewLayoutPopupWindowMovieDetail.findViewById(R.id.btAddToMyList);
         btPlay = viewLayoutPopupWindowMovieDetail.findViewById(R.id.btPlay);
 
         //show popup window
@@ -102,6 +107,12 @@ public class V_ShowMovieDetail
     private void setOnClick() {
         btExit.setOnClickListener(this);
         btDownload.setOnClickListener(this);
+        if(!MainActivity.listMyMovie.contains(movie))
+            btAddToMyList.setOnClickListener(this);
+        else {
+            btAddToMyList.setImageResource(R.drawable.popup_added);
+            btAddToMyList.setClickable(false);
+        }
         btPlay.setOnClickListener(this);
     }
 
@@ -114,9 +125,34 @@ public class V_ShowMovieDetail
             case R.id.btDownload:
                 handle_DownloadMovie();
                 break;
+            case R.id.btAddToMyList:
+                handle_AddToMyList();
+                break;
             case R.id.btPlay:
                 handle_PlayMovie();
                 break;
+        }
+    }
+
+    private void handle_AddToMyList() {
+        if(MyFireBase.checkLoggedIn()){
+            P_AddToMyList p_addToMyList = new P_AddToMyList(context, this, movie);
+            p_addToMyList.add();
+        }else{
+            Toast.makeText(context, "Please login to use this feature!", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    @Override
+    public void onCompleteAddToMyList(boolean isSuccessfullyAddToMyList) {
+        if(isSuccessfullyAddToMyList) {
+            Toast.makeText(context, "Add successfully!", Toast.LENGTH_LONG).show();
+            btAddToMyList.setImageResource(R.drawable.popup_added);
+            btAddToMyList.setClickable(false);
+        }
+        else {
+            Toast.makeText(context, "Add failed, trai again!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -137,7 +173,6 @@ public class V_ShowMovieDetail
     @Override
     public void onCompleteCheckExternalPermission(boolean isPermissionGranted) {
         if(isPermissionGranted){
-            Toast.makeText(context,"Permission granted, Download Movie", Toast.LENGTH_LONG).show();
             P_DownloadMovie p_downloadMovie = new P_DownloadMovie(movie, this, context);
             p_downloadMovie.startDownload();
         }else{
@@ -157,10 +192,12 @@ public class V_ShowMovieDetail
         Intent intent = new Intent(context, MoviePlayActivity.class);
         Bundle bundle = new Bundle();
         bundle.putBoolean("IS_PLAY_ONLINE", Constant.ONLINE);
+        bundle.putParcelable("MOVIE",movie);
         bundle.putString("URL_VIDEO",url_video);
         bundle.putString("URL_SUB",url_sub);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
         context.startActivity(intent);
     }
 
@@ -169,9 +206,8 @@ public class V_ShowMovieDetail
         if(isDownloadSuccessfully){
             Toast.makeText(context, "Download successfully!" + movie.getName(), Toast.LENGTH_LONG).show();
         }else{
-            Toast.makeText(context, "Download failed!", Toast.LENGTH_LONG).show();
+//            Toast.makeText(context, "Download failed!", Toast.LENGTH_LONG).show();
         }
     }
-
 
 }

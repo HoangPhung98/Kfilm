@@ -23,7 +23,9 @@ public class DownloadedMovieDBHelper extends SQLiteOpenHelper {
                     Constant.COLUMN_IMDB + " text, " +
                     Constant.COLUMN_DIRECTOR + " text, " +
                     Constant.COLUMN_PRODUCTION_YEAR + " text, " +
-                    Constant.COLUMN_DESCRIPTION + " text)";
+                    Constant.COLUMN_DESCRIPTION + " text," +
+                    Constant.COLUMN_SIZE + " text," +
+                    Constant.COLUMN_CURRENT_POSITION + " text)";
 
     private static String QUERY_DROP_TABLE ="DROP TABLE IF EXISTS " + Constant.DB_TABLE_NAME;
 
@@ -34,7 +36,6 @@ public class DownloadedMovieDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-//        db.execSQL(QUERY_CREATE_TABLE);
         db.execSQL(QUERY_CREATE_TABLE);
     }
 

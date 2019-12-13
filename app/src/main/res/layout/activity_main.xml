@@ -28,7 +28,7 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         app:menu = "@menu/bottom_navigation_bar"
-        app:itemIconTint="#FFFFFF"
+        app:itemIconTint="@drawable/bottom_navigation_bar_selector"
         app:itemTextColor="#FFFFFF"
         android:background="#050000">
     </com.google.android.material.bottomnavigation.BottomNavigationView>

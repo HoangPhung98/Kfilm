@@ -2,6 +2,7 @@ package com.kingphung.kfilm.view.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,16 +23,23 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
 import com.kingphung.kfilm.R;
+import com.kingphung.kfilm.model.Movie;
+import com.kingphung.kfilm.presenter.updateNewPositionToDownloadedMovie.P_UpdatePositionDownloadedMovie;
 import com.kingphung.kfilm.ultils.Constant;
+import com.kingphung.kfilm.view.showMovieDetail.V_ShowMovieDetail;
+import com.kingphung.kfilm.view.updatePositionDownloadedMovie.V_I_UpdatePositionDownloadedMovie;
 
 import java.io.File;
 
-public class MoviePlayActivity extends AppCompatActivity {
+public class MoviePlayActivity extends AppCompatActivity
+    implements V_I_UpdatePositionDownloadedMovie {
     //Global vars
     private PlayerView playerView;
     private SimpleExoPlayer simpleExoPlayer;
 
     private boolean isPlayOnline;
+
+    private Movie movie;
 
     //link for playing online
     private String link_GGDRIVE;
@@ -41,6 +49,7 @@ public class MoviePlayActivity extends AppCompatActivity {
     private String uri_movieFolder;
     private String uri_movieMP4;
     private String uri_movieSubtitle;
+
 
     //Global vars>>>
     @Override
@@ -60,14 +69,14 @@ public class MoviePlayActivity extends AppCompatActivity {
 
         if(isPlayOnline == Constant.ONLINE){
 
+            movie =  getIntent().getExtras().getParcelable("MOVIE");
             link_GGDRIVE = getIntent().getExtras().getString("URL_VIDEO");
             link_Subtitle = getIntent().getExtras().getString("URL_SUB");
-            initExo(link_GGDRIVE, link_Subtitle);
+            initExo(link_GGDRIVE, link_Subtitle, movie);
 
         }else{
-
+            movie =  getIntent().getExtras().getParcelable("MOVIE");
             uri_movieFolder = getIntent().getExtras().getString("URI_MOVIE_FOLDER");
-            Log.d("KingPhung","--------------" + uri_movieFolder);
             String folderName = uri_movieFolder.substring(uri_movieFolder.lastIndexOf("/")+1);
             uri_movieMP4 =
                     "file://" +
@@ -80,18 +89,13 @@ public class MoviePlayActivity extends AppCompatActivity {
                     File.separator +
                     folderName + Constant.SRT_EXTENSION;
 
-            initExo(uri_movieMP4, uri_movieSubtitle);
+            initExo(uri_movieMP4, uri_movieSubtitle, movie);
         }
 
 
-        //Init movie player using "exoplayer" library
     }
 
-    private void initExo(String linkVideo, String linkSub) {
-
-        Log.d("KingPhung", "====="+linkVideo);
-        Log.d("KingPhung", "====="+linkSub);
-
+    private void initExo(String linkVideo, String linkSub, Movie movie) {
 
         playerView = findViewById(R.id.exo_moviePlay);
         simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(this);
@@ -123,6 +127,7 @@ public class MoviePlayActivity extends AppCompatActivity {
         //set merged source to exoPlayer and make it ready
         simpleExoPlayer.prepare(mediaSourceMerged);
         simpleExoPlayer.setPlayWhenReady(true);
+        simpleExoPlayer.seekTo(Long.parseLong(movie.getCurrentPosition()));
     }
 
     private void setFullScreen() {
@@ -142,6 +147,18 @@ public class MoviePlayActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(isPlayOnline) {
+            V_ShowMovieDetail.movie.setCurrentPosition(simpleExoPlayer.getCurrentPosition()+"");
+        }else{
+            movie.setCurrentPosition(simpleExoPlayer.getCurrentPosition()+"");
+            P_UpdatePositionDownloadedMovie p_updatePositionDownloadedMovie = new P_UpdatePositionDownloadedMovie(this, this, movie);
+            p_updatePositionDownloadedMovie.update();
+        }
         simpleExoPlayer.release();
+    }
+
+    @Override
+    public void onCompleteUpdate(boolean isSuccessfullyUpdate) {
+
     }
 }

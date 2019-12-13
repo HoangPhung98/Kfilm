@@ -31,7 +31,8 @@ public class P_CheckWriteExternalPermission
             if(!checkForPermission()){
                 ActivityCompat.requestPermissions(
                         (Activity)context,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                    Manifest.permission.READ_EXTERNAL_STORAGE},
                         25);
             }else{
                 v_i_checkWriteExternalPermission.onCompleteCheckExternalPermission(true);
@@ -42,7 +43,9 @@ public class P_CheckWriteExternalPermission
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if(grantResults.length>0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                && grantResults[1] == PackageManager.PERMISSION_GRANTED){
             v_i_checkWriteExternalPermission.onCompleteCheckExternalPermission(true);
         }else{
             v_i_checkWriteExternalPermission.onCompleteCheckExternalPermission(false);
@@ -57,8 +60,10 @@ public class P_CheckWriteExternalPermission
     private boolean checkForPermission() {
         if(
                 ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED
-        )return false;
-        return true;
+                        == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED
+        )return true;
+        return false;
     }
 }

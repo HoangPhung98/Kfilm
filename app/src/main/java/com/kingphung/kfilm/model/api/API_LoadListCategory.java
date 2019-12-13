@@ -110,7 +110,9 @@ public class API_LoadListCategory {
                                         jsonObject.getString("IMDB"),
                                         jsonObject.getString("statusSub"),
                                         jsonObject.getString("description"),
-                                        jsonObject.getString("director")
+                                        jsonObject.getString("director"),
+                                        null,
+                                        "0"
                                 );
                                 listMovie.add(movie);
                                 if(!MainActivity.listAllMovie.contains(movie))MainActivity.listAllMovie.add(movie);

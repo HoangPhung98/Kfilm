@@ -2,27 +2,50 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginBottom="8dp"
+    android:layout_marginTop="4dp"
     android:background="@drawable/item_background_downloaded_movie"
     android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/ivDownloadedMovie"
         android:layout_width="0dp"
-        android:layout_weight="2"
-        android:layout_height="120dp">
+        android:layout_weight="3"
+        android:layout_height="170dp">
     </ImageView>
     <LinearLayout
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="6dp"
         android:layout_width="0dp"
         android:layout_weight="7"
         android:orientation="vertical"
         android:layout_height="match_parent">
-        <TextView
-            android:id="@+id/tvNameDownloadedMovie"
-            android:text="Name"
-            android:textStyle="bold"
-            android:textColor="@color/textColorr"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        </TextView>
+            <TextView
+                android:id="@+id/tvNameDownloadedMovie"
+                android:text="Name"
+                android:textStyle="bold"
+                android:layout_weight="7"
+                android:textColor="@color/textColorr"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+            </TextView>
+
+            <TextView
+                android:id="@+id/tvSizeDownloadedMovie"
+                android:gravity="right"
+                android:layout_weight="3"
+                android:textStyle="bold"
+                android:textColor="@color/textColorr"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+            </TextView>
+
+        </LinearLayout>
         <TextView
             android:id="@+id/tvIMDBDownloadedMovie"
             android:text="IMDB"
@@ -47,21 +70,11 @@
         <TextView
             android:id="@+id/tvDescriptionDownloadedMovie"
             android:text="Description"
+            android:maxLines="4"
             android:textStyle="italic"
             android:textColor="@color/textColorr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </TextView>
     </LinearLayout>
-    <TextView
-        android:id="@+id/tvSizeDownloadedMovie"
-        android:text="size"
-        android:layout_weight="1"
-        android:textStyle="bold"
-        android:textColor="@color/textColorr"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content">
-    </TextView>
-
-
 </LinearLayout>

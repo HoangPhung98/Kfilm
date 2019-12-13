@@ -6,4 +6,7 @@
     <color name="black_overlay">#66000000</color>
     <color name="textColorr">#FFFFFF</color>
     <color name="background">#000000</color>
+    <color name="background_gray">#0F0F0F</color>
+    <color name="selector_selected">#26C6DA</color>
+    <color name="selector_default">#FFFFFF</color>
 </resources>

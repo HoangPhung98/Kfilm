@@ -1,11 +1,10 @@
 package com.kingphung.kfilm.model;
 
-
+import android.os.Parcel;
+import android.os.Parcelable;
 import androidx.annotation.Nullable;
 
-import java.io.Serializable;
-
-public class Movie implements Serializable {
+public class Movie implements Parcelable {
     private String id;
     private String name;
     private String product_year;
@@ -14,8 +13,12 @@ public class Movie implements Serializable {
     private String statusSub;
     private String description;
     private String director;
+    private String size;
+    private String currentPosition;
 
-    public Movie(String id, String name, String product_year, String img_url, String IMDB, String statusSub, String description, String director) {
+    public Movie(){}
+
+    public Movie(String id, String name, String product_year, String img_url, String IMDB, String statusSub, String description, String director, String size, String currentPosition) {
         this.id = id;
         this.name = name;
         this.product_year = product_year;
@@ -24,6 +27,8 @@ public class Movie implements Serializable {
         this.statusSub = statusSub;
         this.description = description;
         this.director = director;
+        this.size = size;
+        this.currentPosition = currentPosition;
     }
 
     @Override
@@ -95,19 +100,60 @@ public class Movie implements Serializable {
         this.director = director;
     }
 
-//    public String getLink_drive() {
-//        return link_drive;
-//    }
-//
-//    public void setLink_drive(String link_drive) {
-//        this.link_drive = link_drive;
-//    }
-//
-//    public String getLink_subtitle() {
-//        return link_subtitle;
-//    }
-//
-//    public void setLink_subtitle(String link_subtitle) {
-//        this.link_subtitle = link_subtitle;
-//    }
+    public void setSize(String size){
+        this.size = size;
+    }
+    public String getSize(){
+        return this.size;
+    }
+
+    public void setCurrentPosition(String currentPosition){
+        this.currentPosition = currentPosition;
+    }
+    public String getCurrentPosition(){
+        return  this.currentPosition;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.name);
+        dest.writeString(this.product_year);
+        dest.writeString(this.img_url);
+        dest.writeString(this.IMDB);
+        dest.writeString(this.statusSub);
+        dest.writeString(this.description);
+        dest.writeString(this.director);
+        dest.writeString(this.size);
+        dest.writeString(this.currentPosition);
+    }
+    private Movie(Parcel in){
+        this.id = in.readString();
+        this.name = in.readString();
+        this.product_year = in.readString();
+        this.img_url = in.readString();
+        this.IMDB = in.readString();
+        this.statusSub = in.readString();
+        this.description = in.readString();
+        this.director = in.readString();
+        this.size = in.readString();
+        this.currentPosition = in.readString();
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel source) {
+            return new Movie(source);
+        }
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+
 }
