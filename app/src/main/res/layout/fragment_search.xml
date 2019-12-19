@@ -25,12 +25,6 @@
             android:layout_height="wrap_content">
 
         </EditText>
-        <ImageButton
-            android:layout_marginRight="10dp"
-            android:layout_width="40dp"
-            android:background="@drawable/ic_search_"
-            android:layout_height="40dp">
-        </ImageButton>
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_listSearch"

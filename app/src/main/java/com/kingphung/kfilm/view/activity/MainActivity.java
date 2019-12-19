@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity
                     V_I_ReadSQLite {
 
     //Global variables
-    public static ArrayList<Movie> listAllMovie;
     public static ArrayList<Movie> listMyMovie;
     public static ArrayList<Movie> listDownloadedMovie;
     RecyclerView recycler_listCategory;
@@ -60,14 +59,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         //listAllMovie is used for search fragment
-        listAllMovie = new ArrayList<>();
         listMyMovie = new ArrayList<>();
 
         initUI();
-
-        p_showListMovie = new P_ShowListMovie(this, MainActivity.this, categoryAdapter);
-        p_showListMovie.showListMovie();
-
 
         //read my list movie
         if(MyFireBase.checkLoggedIn()){
@@ -75,8 +69,11 @@ public class MainActivity extends AppCompatActivity
         }
 
         //read listDownloaded movie
-        p_readSQLite = new P_ReadSQLite(this, this);
+        p_readSQLite = new P_ReadSQLite(MainActivity.this, this);
         p_readSQLite.read();
+
+        p_showListMovie = new P_ShowListMovie(this, MainActivity.this, categoryAdapter);
+        p_showListMovie.showListMovie();
     }
     private void initUI(){
         //<create recycler view to show list movie categories
@@ -98,7 +95,7 @@ public class MainActivity extends AppCompatActivity
                         clearAllFragmentFromBackStack();
                         return true;
                     case R.id.nav_search:
-                        loadFragment(new SearchFragment(new ArrayList<Movie>(listAllMovie)));
+                        loadFragment(new SearchFragment());
                         return true;
                     case R.id.nav_download:
                         loadFragment(new DownloadFragment());
@@ -134,10 +131,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void showList(CategoryAdapter categoryAdapter) {
         if(!isAdapterSeted) {
+            isAdapterSeted = true;
+            this.categoryAdapter = categoryAdapter;
             recycler_listCategory.setAdapter(categoryAdapter);
+            this.categoryAdapter.notifyDataSetChanged();
         }
         else {
-            categoryAdapter.notifyDataSetChanged();
+            this.categoryAdapter.notifyDataSetChanged();
         }
     }
 

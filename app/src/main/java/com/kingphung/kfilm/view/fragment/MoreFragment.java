@@ -45,11 +45,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static android.app.Activity.RESULT_OK;
+import static com.kingphung.kfilm.model.firebase.MyFireBase.getMyListMovie;
 
 public class MoreFragment extends Fragment
     implements V_I_ShowPopupLogout,
         V_I_UpdateMyListMovie {
-
+    static final String tag = "M_FRAGMENT";
     //UI
     CircularImageView ivUser;
     TextView tvUserName, tvEmail;
@@ -57,6 +58,7 @@ public class MoreFragment extends Fragment
     FloatingActionButton fabLogout;
 
     RecyclerView recycler_listMyMovie;
+    ArrayList<Movie> listMyMovie;
     MovieAdapter movieAdapter;
     Context context;
 
@@ -71,6 +73,7 @@ public class MoreFragment extends Fragment
 
     public MoreFragment() {
         // Required empty public constructor
+        listMyMovie = new ArrayList<>();
     }
 
 
@@ -81,6 +84,7 @@ public class MoreFragment extends Fragment
         if(firebaseAuth.getCurrentUser() != null) {
             isLoggedIn = true;
             user = firebaseAuth.getCurrentUser();
+            listMyMovie = getMyListMovie();
         }
         Toast.makeText(context, isLoggedIn+"", Toast.LENGTH_SHORT).show();
     }

@@ -24,20 +24,15 @@ import com.kingphung.kfilm.R;
 import com.kingphung.kfilm.model.Category;
 import com.kingphung.kfilm.model.Movie;
 import com.kingphung.kfilm.model.adapter.SearchAdapter;
+import com.kingphung.kfilm.model.api.API_SearchMovie;
+import com.kingphung.kfilm.view.searchMovie.V_I_SearchMovie;
 
 import java.util.ArrayList;
 
-///**
-// * A simple {@link Fragment} subclass.
-// * Activities that contain this fragment must implement the
-// * {@link SearchFragment.OnFragmentInteractionListener} interface
-// * to handle interaction events.
-// * Use the {@link SearchFragment#newInstance} factory method to
-// * create an instance of this fragment.
-// */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment
+    implements V_I_SearchMovie {
     Context context;
-    ArrayList<Movie> listAllMovie;
+    ArrayList<Movie> listMovieSearch;
 
     //UI
     RecyclerView recycler_listSearch;
@@ -46,14 +41,13 @@ public class SearchFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public SearchFragment(ArrayList<Movie> listAllMovie) {
-        this.listAllMovie = listAllMovie;
+    public SearchFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        listMovieSearch = new ArrayList<>();
     }
 
     @Override
@@ -65,27 +59,44 @@ public class SearchFragment extends Fragment {
         recycler_listSearch.setLayoutManager(linearLayoutManager);
         recycler_listSearch.setHasFixedSize(true);
 
-        searchAdapter = new SearchAdapter(context, listAllMovie);
+        searchAdapter = new SearchAdapter(context, listMovieSearch);
         recycler_listSearch.setAdapter(searchAdapter);
 
         etSearch = view.findViewById(R.id.etSearch);
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                //do nothing here
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                searchAdapter.getFilter().filter(s);
+//                searchAdapter.getFilter().filter(s);
+                //Hàm này được gọi mỗi khi gõ text thay đổi edit text trên thanh search.
+                if(s!=null){
+                    String searchWord = s.toString().toLowerCase().trim();
+                    API_SearchMovie api_searchMovie = new API_SearchMovie(context, getV_I_SearchMovie());
+                    api_searchMovie.Search(searchWord);
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                //do nothing here
             }
         });
         return view;
+    }
+
+    @Override
+    public void onCompleteSearchMovie(ArrayList<Movie> listMovie) {
+            this.listMovieSearch.clear();
+            this.listMovieSearch.addAll(listMovie);
+            searchAdapter.notifyDataSetChanged();
+    }
+
+    private V_I_SearchMovie getV_I_SearchMovie(){
+        return this;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -112,6 +123,8 @@ public class SearchFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
+
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name

@@ -22,6 +22,7 @@ import com.kingphung.kfilm.presenter.addToMyList.P_AddToMyList;
 import com.kingphung.kfilm.presenter.downloadMovie.P_CheckWriteExternalPermission;
 import com.kingphung.kfilm.presenter.downloadMovie.P_DownloadMovie;
 import com.kingphung.kfilm.presenter.playMovie.P_LoadLinkMovie;
+import com.kingphung.kfilm.presenter.removeMovieFromMyList.P_RemoveMovieFromMyList;
 import com.kingphung.kfilm.ultils.Constant;
 import com.kingphung.kfilm.view.activity.MainActivity;
 import com.kingphung.kfilm.view.activity.MoviePlayActivity;
@@ -29,6 +30,7 @@ import com.kingphung.kfilm.view.addToMyList.V_I_AddToMyList;
 import com.kingphung.kfilm.view.downloadMovie.V_I_CheckWriteExternalPermission;
 import com.kingphung.kfilm.view.downloadMovie.V_I_DownloadMovie;
 import com.kingphung.kfilm.view.playMovieOnline.V_I_LoadLinkMovie;
+import com.kingphung.kfilm.view.removeMovieFromMyList.V_I_RemoveMovieFromMyList;
 import com.squareup.picasso.Picasso;
 
 public class V_ShowMovieDetail
@@ -36,9 +38,11 @@ public class V_ShowMovieDetail
         V_I_LoadLinkMovie,
         V_I_DownloadMovie,
         V_I_CheckWriteExternalPermission,
-        V_I_AddToMyList {
+        V_I_AddToMyList,
+        V_I_RemoveMovieFromMyList {
 
     public static Movie movie;
+    private boolean isThisMovieInMyList;
     public static int RC_PLAYMOVIE = 26;
 
     Context context;
@@ -117,12 +121,10 @@ public class V_ShowMovieDetail
         }
 
         //btAddToMyList
-        if(!MainActivity.listMyMovie.contains(movie))
-            btAddToMyList.setOnClickListener(this);
-        else {
+        isThisMovieInMyList = MainActivity.listMyMovie.contains(movie);
+        btAddToMyList.setOnClickListener(this);
+        if(isThisMovieInMyList)
             btAddToMyList.setImageResource(R.drawable.popup_added);
-            btAddToMyList.setClickable(false);
-        }
 
         //btPlay
         btPlay.setOnClickListener(this);
@@ -148,13 +150,19 @@ public class V_ShowMovieDetail
 
     private void handle_AddToMyList() {
         if(MyFireBase.checkLoggedIn()){
-            P_AddToMyList p_addToMyList = new P_AddToMyList(context, this, movie);
-            p_addToMyList.add();
+            if(!isThisMovieInMyList){
+                P_AddToMyList p_addToMyList = new P_AddToMyList(context, this, movie);
+                p_addToMyList.add();
+            }else{
+                P_RemoveMovieFromMyList p_removeMovieFromMyList = new P_RemoveMovieFromMyList(context, this);
+                p_removeMovieFromMyList.remove(movie.getName());
+            }
         }else{
             Toast.makeText(context, "Please login to use this feature!", Toast.LENGTH_LONG).show();
         }
 
     }
+
 
     @Override
     public void onCompleteAddToMyList(boolean isSuccessfullyAddToMyList) {
@@ -165,6 +173,16 @@ public class V_ShowMovieDetail
         }
         else {
             Toast.makeText(context, "Add failed, trai again!", Toast.LENGTH_SHORT).show();
+        }
+    }
+    @Override
+    public void onCompleteRemoveMovieFromMyList(boolean isSuccessfullyRemove) {
+        if(isSuccessfullyRemove) {
+            Toast.makeText(context, "Add successfully!", Toast.LENGTH_LONG).show();
+            btAddToMyList.setImageResource(R.drawable.popup_add_to_my_list);
+        }
+        else {
+            Toast.makeText(context, "Remove failed, trai again!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -223,5 +241,6 @@ public class V_ShowMovieDetail
 //            Toast.makeText(context, "Download failed!", Toast.LENGTH_LONG).show();
         }
     }
+
 
 }

@@ -15,8 +15,6 @@ import com.kingphung.kfilm.model.Category;
 import com.kingphung.kfilm.model.Movie;
 import com.kingphung.kfilm.model.adapter.CategoryAdapter;
 import com.kingphung.kfilm.presenter.showListCategory.P_impShowListMovie;
-import com.kingphung.kfilm.view.activity.MainActivity;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -115,10 +113,8 @@ public class API_LoadListCategory {
                                         "0"
                                 );
                                 listMovie.add(movie);
-                                if(!MainActivity.listAllMovie.contains(movie))MainActivity.listAllMovie.add(movie);
-                                Log.d("KingPhung","===========Category update");
+                                p_impShowListMovie.onAPIResponse(categoryAdapter);
                             }
-                            p_impShowListMovie.onAPIResponse(categoryAdapter);
                             //after loading a list of movie by type, create a Category adapter to display list movie
                             //why i place 2 these code lines here?
                             //because if i place it in the MainActivity(look back to MainActivity file to see)

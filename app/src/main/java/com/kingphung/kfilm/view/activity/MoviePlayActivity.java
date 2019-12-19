@@ -1,14 +1,10 @@
 package com.kingphung.kfilm.view.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
-
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.Format;
@@ -63,8 +59,10 @@ public class MoviePlayActivity extends AppCompatActivity
                 setFullScreen();
             }
         });
-        setFullScreen();
+//        setFullScreen();
 
+
+        //lấy dữ liệu về phim bao gồm meta data của phim, link đến file mp4 và file subtitle của phim
         isPlayOnline = getIntent().getExtras().getBoolean("IS_PLAY_ONLINE");
 
         if(isPlayOnline == Constant.ONLINE){
@@ -96,11 +94,13 @@ public class MoviePlayActivity extends AppCompatActivity
     }
 
     private void initExo(String linkVideo, String linkSub, Movie movie) {
+        // thiết lập trình xem phim, sử dụng thư viện exoPlayer.
 
         playerView = findViewById(R.id.exo_moviePlay);
         simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(this);
         playerView.setPlayer(simpleExoPlayer);
 
+        //thiết lập nguồn dữ liệu bao gồm: video, subtitle để play movie
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this,
                 Util.getUserAgent(this, "kfilm"));
 
@@ -131,6 +131,7 @@ public class MoviePlayActivity extends AppCompatActivity
     }
 
     private void setFullScreen() {
+        //thiết lập full màn hình
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 // Set the content to appear under the system bars so that the
@@ -147,14 +148,18 @@ public class MoviePlayActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        simpleExoPlayer.stop();
+        simpleExoPlayer.clearVideoSurface();
+        simpleExoPlayer.release();
         if(isPlayOnline) {
+            //lưu vị trí phim đang xem hiện tại lên firebase
             V_ShowMovieDetail.movie.setCurrentPosition(simpleExoPlayer.getCurrentPosition()+"");
         }else{
+            //lưu vị trí phim offline đang xem hiệp tại vào sqlite
             movie.setCurrentPosition(simpleExoPlayer.getCurrentPosition()+"");
             P_UpdatePositionDownloadedMovie p_updatePositionDownloadedMovie = new P_UpdatePositionDownloadedMovie(this, this, movie);
             p_updatePositionDownloadedMovie.update();
         }
-        simpleExoPlayer.release();
     }
 
     @Override
