@@ -1,14 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    tools:context=".view.fragment.MovieDetail">
+    android:background="#ff000000"
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
 
-</FrameLayout>
+
+        <ImageView
+            android:id="@+id/background_banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/banner" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@id/background_banner"
+            android:layout_alignBottom="@+id/background_banner"
+            android:background="@drawable/gradient" />
+
+        <TextView
+            android:id="@+id/movieTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:text="The Witcher 3: Wild Hunt"
+            android:layout_above="@id/movieDirector"
+            android:textColor="#ffffff"
+            android:textSize="30dp" />
+
+
+        <TextView
+            android:id="@+id/movieYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/background_banner"
+            android:layout_alignLeft="@id/movieTitle"
+            android:text="2016"
+            android:textColor="#ffffff" />
+
+
+        <TextView
+            android:id="@+id/movieDecription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/movieYear"
+            android:layout_alignLeft="@id/movieTitle"
+            android:layout_alignRight="@id/movieTitle"
+            android:layout_marginTop="8dp"
+            android:justificationMode="inter_word"
+            android:text="description"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:id="@+id/movieDirector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/playBtn"
+            android:layout_alignLeft="@id/movieTitle"
+            android:layout_alignRight="@id/movieTitle"
+            android:text="CD PROJECT RED"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:id="@+id/imdbMovie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/background_banner"
+            android:layout_alignRight="@id/movieTitle"
+            android:text="IMDB: xx"
+            android:textColor="#ffffff" />
+
+
+        <Button
+            android:id="@+id/playBtn"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/background_banner"
+            android:drawableLeft="@drawable/ic_play"
+            android:text="play"
+            android:textAlignment="center"
+            android:textColor="#FF0000" />
+
+        <Button
+            android:id="@+id/downloadBtn"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/background_banner"
+            android:layout_toRightOf="@id/playBtn"
+            android:drawableLeft="@drawable/ic_download"
+            android:text="download"
+            android:textColor="#FF0000" />
+
+        <Button
+            android:id="@+id/addtolistBtn"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/background_banner"
+            android:layout_toRightOf="@id/downloadBtn"
+            android:drawableLeft="@drawable/ic_addtolist"
+            android:text="Add"
+            android:textColor="#FF0000" />
+
+        <ImageButton
+            android:id="@+id/backBtn"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_back" />
+    </RelativeLayout>
+
+
+</ScrollView>

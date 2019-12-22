@@ -2,25 +2,30 @@ package com.kingphung.kfilm.model.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kingphung.kfilm.model.Movie;
 import com.kingphung.kfilm.R;
 import com.kingphung.kfilm.view.fragment.MoreFragment;
+import com.kingphung.kfilm.view.fragment.MovieDetail;
 import com.kingphung.kfilm.view.removeMovieFromMyList.V_I_RemoveMovieFromMyList;
 import com.kingphung.kfilm.view.showMovieDetail.V_ShowMovieDetail;
 import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>
-    implements V_I_RemoveMovieFromMyList {
+        implements V_I_RemoveMovieFromMyList {
     ArrayList<Movie> listMovie;
     Context context;
 
@@ -47,12 +52,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>
             @Override
             public void onClick(View v) {
                 //hoaang
-                    showMovieDetail(listMovie.get(position), context);
+//                    showMovieDetail(listMovie.get(position), context);
                 //hminh
-//                FragmentTransaction fragmentTransaction =  ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction();
-//                fragmentTransaction.replace(R.id.fragment_container,new MoreFragment());
-//                fragmentTransaction.addToBackStack(null);
-//                fragmentTransaction.commit();
+                FragmentTransaction fragmentTransaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+                MovieDetail movieDetail = new MovieDetail();
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("movie", listMovie.get(position));
+                movieDetail.setArguments(bundle);
+                fragmentTransaction.replace(R.id.fragment_container, movieDetail);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
             }
         });
         //map a movie picture to the item of a sub/listMovie recycler view
@@ -74,8 +84,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>
         if (isSuccessfullyRemove) notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
-     private ImageView imgMovie;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private ImageView imgMovie;
+
         public ViewHolder(@NonNull View itemView) {
 
             //init the UI for a item for sub/listMovie recycler view
