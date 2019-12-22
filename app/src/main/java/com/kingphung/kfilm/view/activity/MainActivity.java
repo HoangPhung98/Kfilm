@@ -126,18 +126,22 @@ public class MainActivity extends AppCompatActivity
         super.onBackPressed();
         List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
         for(int i=0; i<fragmentList.size(); i++) Log.d("KingPhung", fragmentList.get(i).toString());
-        Log.d("KingPhung", fragmentList.get(fragmentList.size()-1).getClass().toString());
-        switch (fragmentList.get(fragmentList.size()-1).getClass().toString()){
-            case "class com.kingphung.kfilm.view.fragment."+"SearchFragment":
-                bottomNavigationView.setSelectedItemId(R.id.nav_search);
-                break;
-            case "class com.kingphung.kfilm.view.fragment."+"DownloadFragment":
-                bottomNavigationView.setSelectedItemId(R.id.nav_download);
-                break;
+        if(fragmentList.size()>0){
+            switch (fragmentList.get(fragmentList.size()-1).getClass().toString()){
+                case "class com.kingphung.kfilm.view.fragment."+"SearchFragment":
+                    bottomNavigationView.setSelectedItemId(R.id.nav_search);
+                    break;
+                case "class com.kingphung.kfilm.view.fragment."+"DownloadFragment":
+                    bottomNavigationView.setSelectedItemId(R.id.nav_download);
+                    break;
                 case "class com.kingphung.kfilm.view.fragment."+"MoreFragment":
-                bottomNavigationView.setSelectedItemId(R.id.nav_more);
-                break;
+                    bottomNavigationView.setSelectedItemId(R.id.nav_more);
+                    break;
+            }
+        }else{
+            bottomNavigationView.setSelectedItemId(R.id.nav_home);
         }
+
 
     }
 
