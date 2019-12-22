@@ -52,14 +52,14 @@ public class MoviePlayActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_play);
-
+        //full screen
         getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 setFullScreen();
             }
         });
-//        setFullScreen();
+
 
 
         //lấy dữ liệu về phim bao gồm meta data của phim, link đến file mp4 và file subtitle của phim
@@ -95,8 +95,7 @@ public class MoviePlayActivity extends AppCompatActivity
 
     private void initExo(String linkVideo, String linkSub, Movie movie) {
         // thiết lập trình xem phim, sử dụng thư viện exoPlayer.
-
-        playerView = findViewById(R.id.exo_moviePlay);
+        playerView = findViewById(R.id.exo_moviePlayer_view);
         simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(this);
         playerView.setPlayer(simpleExoPlayer);
 

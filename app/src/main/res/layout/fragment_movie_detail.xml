@@ -30,9 +30,9 @@
             android:id="@+id/movieTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_above="@id/movieDirector"
             android:layout_marginHorizontal="8dp"
             android:text="The Witcher 3: Wild Hunt"
-            android:layout_above="@id/movieDirector"
             android:textColor="#ffffff"
             android:textSize="30dp" />
 
@@ -73,11 +73,11 @@
             android:id="@+id/imdbMovie"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/background_banner"
+            android:layout_alignEnd="@id/movieDirector"
             android:layout_alignRight="@id/movieTitle"
             android:text="IMDB: xx"
-            android:textColor="#ffffff" />
-
+            android:layout_below="@id/movieTitle"
+            android:textColor="#FFD700" />
 
         <Button
             android:id="@+id/playBtn"
@@ -86,8 +86,8 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/background_banner"
             android:drawableLeft="@drawable/ic_play"
+            android:gravity="left|center_vertical"
             android:text="play"
-            android:textAlignment="center"
             android:textColor="#FF0000" />
 
         <Button
@@ -96,8 +96,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/background_banner"
-            android:layout_toRightOf="@id/playBtn"
+            android:layout_centerInParent="true"
             android:drawableLeft="@drawable/ic_download"
+            android:gravity="center_vertical"
             android:text="download"
             android:textColor="#FF0000" />
 
@@ -106,9 +107,11 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignRight="@id/movieTitle"
             android:layout_alignBottom="@id/background_banner"
-            android:layout_toRightOf="@id/downloadBtn"
+            android:layout_gravity="right"
             android:drawableLeft="@drawable/ic_addtolist"
+            android:gravity="right|center_vertical"
             android:text="Add"
             android:textColor="#FF0000" />
 

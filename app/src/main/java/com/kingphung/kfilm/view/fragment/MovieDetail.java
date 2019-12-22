@@ -116,7 +116,8 @@ public class MovieDetail extends Fragment implements View.OnClickListener, V_I_L
 
         title.setText(movie.getName());
         year.setText(movie.getProduct_year());
-        imdb.setText(movie.getIMDB());
+
+        imdb.setText("IMDB: " +movie.getIMDB());
         director.setText(movie.getDirector());
         description.setText(movie.getDescription());
         String urlToLargeImg = changeurl(movie.getImg_url());

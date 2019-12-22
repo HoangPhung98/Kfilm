@@ -7,13 +7,10 @@
     tools:context=".view.activity.MoviePlayActivity"
     android:background="#000000">
 
-    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-        android:id="@+id/exo_moviePlay"
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/exo_moviePlayer_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        />
 
 </LinearLayout>
