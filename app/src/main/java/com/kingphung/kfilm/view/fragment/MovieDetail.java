@@ -57,7 +57,7 @@ public class MovieDetail extends Fragment implements View.OnClickListener, V_I_L
 
     TextView title, imdb, year, director, description;
 
-    private Movie movie;
+    private static Movie movie;
 
     boolean isThisMovieInMyList;
     boolean isThisMovieDownloaded;
@@ -187,8 +187,12 @@ public class MovieDetail extends Fragment implements View.OnClickListener, V_I_L
     }
 
     private void handle_downloadMovie() {
-        P_CheckWriteExternalPermission checkPermission = new P_CheckWriteExternalPermission(context, this);
-        checkPermission.check();
+        if (isThisMovieDownloaded) {
+            Toast.makeText(context, "Movie downloaded!", Toast.LENGTH_SHORT).show();
+        } else {
+            P_CheckWriteExternalPermission checkPermission = new P_CheckWriteExternalPermission(context, this);
+            checkPermission.check();
+        }
     }
 
     @Override
@@ -206,6 +210,7 @@ public class MovieDetail extends Fragment implements View.OnClickListener, V_I_L
         if (isDownloadSuccessfully) {
             MainActivity.listDownloadedMovie.add(movie);
             downloadBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_downloaded, 0, 0, 0);
+            downloadBtn.setText("Downloaded");
         }
     }
 
