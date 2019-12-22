@@ -48,7 +48,7 @@ import static android.app.Activity.RESULT_OK;
 import static com.kingphung.kfilm.model.firebase.MyFireBase.getMyListMovie;
 
 public class MoreFragment extends Fragment
-    implements V_I_ShowPopupLogout,
+        implements V_I_ShowPopupLogout,
         V_I_UpdateMyListMovie {
     static final String tag = "M_FRAGMENT";
     //UI
@@ -81,12 +81,12 @@ public class MoreFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         firebaseAuth = FirebaseAuth.getInstance();
-        if(firebaseAuth.getCurrentUser() != null) {
+        if (firebaseAuth.getCurrentUser() != null) {
             isLoggedIn = true;
             user = firebaseAuth.getCurrentUser();
             listMyMovie = getMyListMovie();
         }
-        Toast.makeText(context, isLoggedIn+"", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, isLoggedIn + "", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -111,9 +111,9 @@ public class MoreFragment extends Fragment
         recycler_listMyMovie.setHasFixedSize(true);
         setListenerLoggedIn();
 
-        if(isLoggedIn == false) {
+        if (isLoggedIn == false) {
             layoutLogin.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             updateUIOfLoggedInUser();
         }
 
@@ -124,20 +124,18 @@ public class MoreFragment extends Fragment
         btLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("KingPhung","Click login");
+                Log.d("KingPhung", "Click login");
                 startActivityForResult(
-                        AuthUI.getInstance().createSignInIntentBuilder()
+                        AuthUI.getInstance()
+                                .createSignInIntentBuilder()
                                 .setAvailableProviders(
-                                        Arrays.asList(
-                                                new AuthUI.IdpConfig.GoogleBuilder().build()
-                                        )
-                                )
-                                .build(), RC_LOGIN
-
-                );
+                                        Arrays.asList(new AuthUI.IdpConfig.GoogleBuilder().build()))
+                                .build(),
+                        RC_LOGIN);
             }
         });
     }
+
     private void setListenerLoggedIn() {
         fabLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,23 +145,26 @@ public class MoreFragment extends Fragment
             }
         });
     }
-    private V_I_ShowPopupLogout getV_I_ShowPopupLogout(){return this;}
+
+    private V_I_ShowPopupLogout getV_I_ShowPopupLogout() {
+        return this;
+    }
 
     @Override
     public void onCompleteSeleted(boolean isWantToLogout) {
-        if(isWantToLogout){
+        if (isWantToLogout) {
             AuthUI.getInstance().signOut(context).
                     addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText( context, "Bye", Toast.LENGTH_SHORT).show();
-                            Log.d("KingPhung","Logged out");
+                            Toast.makeText(context, "Bye", Toast.LENGTH_SHORT).show();
+                            Log.d("KingPhung", "Logged out");
                             updateLoggedOut();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.d("KingPhung=======error: ",e.toString());
+                    Log.d("KingPhung=======error: ", e.toString());
                 }
             });
         }
@@ -172,17 +173,17 @@ public class MoreFragment extends Fragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("KingPhung","******Resulted");
-        if(requestCode == RC_LOGIN && data!= null){
+        Log.d("KingPhung", "******Resulted");
+        if (requestCode == RC_LOGIN && data != null) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
-            if(resultCode == RESULT_OK){
-                Log.d("KingPhung", response.getEmail()+"");
+            if (resultCode == RESULT_OK) {
+                Log.d("KingPhung", response.getEmail() + "");
                 updateLoggedIn();
-            }else{
-                Log.d("KingPhung", response.getError()+"");
-                Toast.makeText(context, "error: " + resultCode+"", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.d("KingPhung", String.valueOf(response.getError()));
+                Toast.makeText(context, "error: " + resultCode + "", Toast.LENGTH_SHORT).show();
             }
-        }else{
+        } else {
             Toast.makeText(context, "Some error, pls try again!", Toast.LENGTH_SHORT).show();
         }
     }
@@ -193,14 +194,14 @@ public class MoreFragment extends Fragment
         Picasso.get().load(user.getPhotoUrl()).into(ivUser);
         tvUserName.setText(user.getDisplayName());
         tvEmail.setText(user.getEmail());
-        if(movieAdapter == null) {
+        if (movieAdapter == null) {
             movieAdapter = new MovieAdapter(MainActivity.listMyMovie, context);
             recycler_listMyMovie.setAdapter(movieAdapter);
         }
         movieAdapter.notifyDataSetChanged();
     }
 
-    private void updateUIOfLoggedOut(){
+    private void updateUIOfLoggedOut() {
         layoutLogin.setVisibility(View.VISIBLE);
     }
 
@@ -208,7 +209,7 @@ public class MoreFragment extends Fragment
         MainActivity.listMyMovie.clear();
     }
 
-    private void updateMyListLoggedIn(){
+    private void updateMyListLoggedIn() {
 
         P_UpdateMyListMovie p_updateMyListMovie = new P_UpdateMyListMovie(this);
         p_updateMyListMovie.update();
@@ -220,24 +221,24 @@ public class MoreFragment extends Fragment
         MainActivity.listMyMovie.clear();
         MainActivity.listMyMovie.addAll(myListMovie);
 //        movieAdapter = new MovieAdapter(myListMovie, context);
-        Log.d("KingPhung","SIZE: "+MainActivity.listMyMovie.size());
+        Log.d("KingPhung", "SIZE: " + MainActivity.listMyMovie.size());
         movieAdapter.notifyDataSetChanged();
 
     }
 
-    private void updateLoggedIn(){
+    private void updateLoggedIn() {
         updateMyListLoggedIn();
         user = FirebaseAuth.getInstance().getCurrentUser();
         isLoggedIn = true;
         updateUIOfLoggedInUser();
     }
-    private void updateLoggedOut(){
+
+    private void updateLoggedOut() {
         updateUIOfLoggedOut();
         updateMyListLoggedOut();
         user = null;
         isLoggedIn = false;
     }
-
 
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -264,7 +265,6 @@ public class MoreFragment extends Fragment
         super.onDetach();
         mListener = null;
     }
-
 
 
     public interface OnFragmentInteractionListener {
