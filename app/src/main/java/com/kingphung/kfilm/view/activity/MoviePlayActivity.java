@@ -153,7 +153,7 @@ public class MoviePlayActivity extends AppCompatActivity
         simpleExoPlayer.release();
         if(isPlayOnline) {
             //lưu vị trí phim đang xem hiện tại lên firebase
-            V_ShowMovieDetail.movie.setCurrentPosition(simpleExoPlayer.getCurrentPosition()+"");
+            movie.setCurrentPosition(simpleExoPlayer.getCurrentPosition()+"");
         }else{
             //lưu vị trí phim offline đang xem hiệp tại vào sqlite
             movie.setCurrentPosition(simpleExoPlayer.getCurrentPosition()+"");

@@ -51,19 +51,21 @@ public class V_ShowMovieDetail
     PopupWindow popupWindow;
     ImageView ivMoviePoster;
     TextView tvMovieName, tvMovieIMDB, tvMovieProductionYear, tvMovieDirector, tvMovieDescription;
-    ImageButton btExit, btDownload,btAddToMyList, btPlay;
-    public V_ShowMovieDetail(Movie movie, Context context){
+    ImageButton btExit, btDownload, btAddToMyList, btPlay;
+
+    public V_ShowMovieDetail(Movie movie, Context context) {
         this.movie = movie;
         this.context = context;
     }
 
-    public void showDetail(){
+    public void showDetail() {
         //init UI of popup window to show movie detail
         initUI();
         mapDataToUI();
         setOnClick();
     }
-    private void initUI(){
+
+    private void initUI() {
         LayoutInflater inflater = LayoutInflater.from(context);
         View viewLayoutPopupWindowMovieDetail = inflater.inflate(R.layout.popupwindow_movie_detail, null);
         popupWindow = new PopupWindow(
@@ -85,11 +87,11 @@ public class V_ShowMovieDetail
         btPlay = viewLayoutPopupWindowMovieDetail.findViewById(R.id.btPlay);
 
         //show popup window
-        popupWindow.showAtLocation(viewLayoutPopupWindowMovieDetail, Gravity.CENTER,0,0);
+        popupWindow.showAtLocation(viewLayoutPopupWindowMovieDetail, Gravity.CENTER, 0, 0);
 
         //set dim behind when popup window show up
         View container = popupWindow.getContentView().getRootView();
-        if(container != null) {
+        if (container != null) {
             WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             WindowManager.LayoutParams p = (WindowManager.LayoutParams) container.getLayoutParams();
             p.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
@@ -100,6 +102,7 @@ public class V_ShowMovieDetail
         }
 
     }
+
     private void mapDataToUI() {
         Picasso.get().load(movie.getImg_url()).into(ivMoviePoster);
         tvMovieName.setText(movie.getName());
@@ -108,12 +111,13 @@ public class V_ShowMovieDetail
         tvMovieProductionYear.setText(Constant.YEAR + movie.getProduct_year());
         tvMovieDescription.setText(Constant.DESCRIPTION + movie.getDescription());
     }
+
     private void setOnClick() {
         //btExit
         btExit.setOnClickListener(this);
 
         //btDownload
-        if(!MainActivity.listDownloadedMovie.contains(movie))
+        if (!MainActivity.listDownloadedMovie.contains(movie))
             btDownload.setOnClickListener(this);
         else {
             btDownload.setImageResource(R.drawable.popup_downloaded);
@@ -123,7 +127,7 @@ public class V_ShowMovieDetail
         //btAddToMyList
         isThisMovieInMyList = MainActivity.listMyMovie.contains(movie);
         btAddToMyList.setOnClickListener(this);
-        if(isThisMovieInMyList)
+        if (isThisMovieInMyList)
             btAddToMyList.setImageResource(R.drawable.popup_added);
 
         //btPlay
@@ -132,7 +136,7 @@ public class V_ShowMovieDetail
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btCancel:
                 handle_ExitPopupWindow();
                 break;
@@ -149,15 +153,15 @@ public class V_ShowMovieDetail
     }
 
     private void handle_AddToMyList() {
-        if(MyFireBase.checkLoggedIn()){
-            if(!isThisMovieInMyList){
+        if (MyFireBase.checkLoggedIn()) {
+            if (!isThisMovieInMyList) {
                 P_AddToMyList p_addToMyList = new P_AddToMyList(context, this, movie);
                 p_addToMyList.add();
-            }else{
+            } else {
                 P_RemoveMovieFromMyList p_removeMovieFromMyList = new P_RemoveMovieFromMyList(context, this);
                 p_removeMovieFromMyList.remove(movie.getName());
             }
-        }else{
+        } else {
             Toast.makeText(context, "Please login to use this feature!", Toast.LENGTH_LONG).show();
         }
 
@@ -166,22 +170,21 @@ public class V_ShowMovieDetail
 
     @Override
     public void onCompleteAddToMyList(boolean isSuccessfullyAddToMyList) {
-        if(isSuccessfullyAddToMyList) {
+        if (isSuccessfullyAddToMyList) {
             Toast.makeText(context, "Add successfully!", Toast.LENGTH_LONG).show();
             btAddToMyList.setImageResource(R.drawable.popup_added);
             btAddToMyList.setClickable(false);
-        }
-        else {
+        } else {
             Toast.makeText(context, "Add failed, trai again!", Toast.LENGTH_SHORT).show();
         }
     }
+
     @Override
     public void onCompleteRemoveMovieFromMyList(boolean isSuccessfullyRemove) {
-        if(isSuccessfullyRemove) {
+        if (isSuccessfullyRemove) {
             Toast.makeText(context, "Add successfully!", Toast.LENGTH_LONG).show();
             btAddToMyList.setImageResource(R.drawable.popup_add_to_my_list);
-        }
-        else {
+        } else {
             Toast.makeText(context, "Remove failed, trai again!", Toast.LENGTH_SHORT).show();
         }
     }
@@ -191,9 +194,11 @@ public class V_ShowMovieDetail
         P_LoadLinkMovie loadLinkMovie = new P_LoadLinkMovie(movie.getId(), context, getImplLoadLinkMovie());
         loadLinkMovie.load();
     }
-    private V_I_LoadLinkMovie getImplLoadLinkMovie(){
+
+    private V_I_LoadLinkMovie getImplLoadLinkMovie() {
         return this;
     }
+
     private void handle_DownloadMovie() {
         P_CheckWriteExternalPermission p_checkWriteExternalPermission =
                 new P_CheckWriteExternalPermission(context, this);
@@ -202,11 +207,11 @@ public class V_ShowMovieDetail
 
     @Override
     public void onCompleteCheckExternalPermission(boolean isPermissionGranted) {
-        if(isPermissionGranted){
+        if (isPermissionGranted) {
             P_DownloadMovie p_downloadMovie = new P_DownloadMovie(movie, this, context);
             p_downloadMovie.startDownload();
-        }else{
-            Toast.makeText(context,"Please grant me permission to download video!", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(context, "Please grant me permission to download video!", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -222,9 +227,9 @@ public class V_ShowMovieDetail
         Intent intent = new Intent(context, MoviePlayActivity.class);
         Bundle bundle = new Bundle();
         bundle.putBoolean("IS_PLAY_ONLINE", Constant.ONLINE);
-        bundle.putParcelable("MOVIE",movie);
-        bundle.putString("URL_VIDEO",url_video);
-        bundle.putString("URL_SUB",url_sub);
+        bundle.putParcelable("MOVIE", movie);
+        bundle.putString("URL_VIDEO", url_video);
+        bundle.putString("URL_SUB", url_sub);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
@@ -233,11 +238,11 @@ public class V_ShowMovieDetail
 
     @Override
     public void onCompleteDownload(boolean isDownloadSuccessfully, Movie movie) {
-        if(isDownloadSuccessfully){
+        if (isDownloadSuccessfully) {
             MainActivity.listDownloadedMovie.add(movie);
             btDownload.setImageResource(R.drawable.popup_downloaded);
             Toast.makeText(context, "Download successfully!" + movie.getName(), Toast.LENGTH_LONG).show();
-        }else{
+        } else {
 //            Toast.makeText(context, "Download failed!", Toast.LENGTH_LONG).show();
         }
     }
