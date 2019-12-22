@@ -249,6 +249,7 @@ public class MovieDetail extends Fragment
     @Override
     public void onCompleteAddToMyList(boolean isSuccessfullyAddToMyList) {
         if (isSuccessfullyAddToMyList) {
+            Log.d("KingPhung","mylistSize"+MainActivity.listMyMovie.size());
             isThisMovieInMyList = true;
             Toast.makeText(context, "Movie added!", Toast.LENGTH_SHORT).show();
             addtolistBtn.setText("Remove");

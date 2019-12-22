@@ -1,6 +1,8 @@
 package com.kingphung.kfilm.presenter.downloadMovie;
 
 import android.content.Context;
+import android.util.Log;
+
 import com.kingphung.kfilm.model.Movie;
 import com.kingphung.kfilm.model.downloadMovie.M_DownloadMovie;
 import com.kingphung.kfilm.model.updateSqliteDatabase.M_UpdateSqliteDatabase;
@@ -41,6 +43,7 @@ public class P_DownloadMovie
     public void onCompleteDownloadMovie(boolean isDownloadSuccessfully, Movie movie, String size) {
         v_i_downloadMovie.onCompleteDownload(isDownloadSuccessfully, movie);
         if(isDownloadSuccessfully){
+            Log.d("KingPhung:update","up");
             M_UpdateSqliteDatabase m_updateSqliteDatabase = new M_UpdateSqliteDatabase(context, movie, this, size);
             m_updateSqliteDatabase.insert();
         }

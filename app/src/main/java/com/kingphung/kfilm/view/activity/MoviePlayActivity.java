@@ -21,6 +21,7 @@ import com.google.android.exoplayer2.util.Util;
 import com.kingphung.kfilm.R;
 import com.kingphung.kfilm.model.Movie;
 import com.kingphung.kfilm.presenter.updateNewPositionToDownloadedMovie.P_UpdatePositionDownloadedMovie;
+import com.kingphung.kfilm.presenter.updatePositionMyListMovie.P_UpdatePositionMyListMovie;
 import com.kingphung.kfilm.ultils.Constant;
 import com.kingphung.kfilm.view.showMovieDetail.V_ShowMovieDetail;
 import com.kingphung.kfilm.view.updatePositionDownloadedMovie.V_I_UpdatePositionDownloadedMovie;
@@ -68,6 +69,14 @@ public class MoviePlayActivity extends AppCompatActivity
         if(isPlayOnline == Constant.ONLINE){
 
             movie =  getIntent().getExtras().getParcelable("MOVIE");
+            if(MainActivity.listMyMovie.contains(movie)){
+                for(int i=0; i<MainActivity.listMyMovie.size(); i++){
+                    if(MainActivity.listMyMovie.get(i).getName().equals(movie.getName())){
+                        movie = MainActivity.listMyMovie.get(i);
+                        break;
+                    }
+                }
+            }
             link_GGDRIVE = getIntent().getExtras().getString("URL_VIDEO");
             link_Subtitle = getIntent().getExtras().getString("URL_SUB");
             initExo(link_GGDRIVE, link_Subtitle, movie);
@@ -154,6 +163,8 @@ public class MoviePlayActivity extends AppCompatActivity
         if(isPlayOnline) {
             //lưu vị trí phim đang xem hiện tại lên firebase
             movie.setCurrentPosition(simpleExoPlayer.getCurrentPosition()+"");
+            P_UpdatePositionMyListMovie p_updatePositionMyListMovie = new P_UpdatePositionMyListMovie(this, movie);
+            p_updatePositionMyListMovie.update();
         }else{
             //lưu vị trí phim offline đang xem hiệp tại vào sqlite
             movie.setCurrentPosition(simpleExoPlayer.getCurrentPosition()+"");

@@ -3,6 +3,8 @@ package com.kingphung.kfilm.model.updateSqliteDatabase;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
 import com.kingphung.kfilm.model.Movie;
 import com.kingphung.kfilm.presenter.updateSqliteDatabase.P_I_UpdateSqliteDatabase;
 import com.kingphung.kfilm.sqlite.DownloadedMovieDBHelper;

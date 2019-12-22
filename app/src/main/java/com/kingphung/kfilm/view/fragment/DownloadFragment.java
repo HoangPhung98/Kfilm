@@ -107,7 +107,7 @@ public class DownloadFragment extends Fragment
     @Override
     public void onCompleteReadSQLite(ArrayList<Movie> listDownloadedMovie2) {
         listDownloadedMovie = listDownloadedMovie2;
-        downloadedMovieAdapter = new DownloadedMovieAdapter(context, listDownloadedMovie);
+        downloadedMovieAdapter = new DownloadedMovieAdapter(context, listDownloadedMovie2);
         Log.d("KingPhung",listDownloadedMovie.size()+"");
         recyclerView.setAdapter(downloadedMovieAdapter);
     }

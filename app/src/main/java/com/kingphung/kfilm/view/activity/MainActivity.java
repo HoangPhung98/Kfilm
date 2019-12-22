@@ -182,5 +182,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onCompleteReadSQLite(ArrayList<Movie> listDownloadedMovie) {
         this.listDownloadedMovie = listDownloadedMovie;
+        for(int i=0; i<listDownloadedMovie.size(); i++) Log.d("KingPhung",listDownloadedMovie.get(i).getSize()+"md");
     }
 }

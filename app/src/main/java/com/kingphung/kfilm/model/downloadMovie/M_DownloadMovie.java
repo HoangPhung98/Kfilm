@@ -2,6 +2,7 @@ package com.kingphung.kfilm.model.downloadMovie;
 
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.StatFs;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ public class M_DownloadMovie {
     String url_video;
     String url_sub;
     P_I_DownloadMovie p_i_downloadMovie;
+    boolean flag_isTooLarge = false;
     public M_DownloadMovie(Movie movie, String url_video, String url_sub, P_I_DownloadMovie p_i_downloadMovie){
         this.movie = movie;
         this.url_video = url_video;
@@ -65,7 +67,9 @@ public class M_DownloadMovie {
 
                 //get length of mp file
                 lengthOfFile = connection.getContentLength();
+                File external = Environment.getExternalStorageDirectory();
 
+                if(!flag_isTooLarge && lengthOfFile < external.getFreeSpace()){
                 //set up input stream to fetch data from connection
                 InputStream inputStream = new BufferedInputStream(url.openStream(), 8192);
 
@@ -81,33 +85,43 @@ public class M_DownloadMovie {
 //                            movie.getName() +
 //                            File.separator;
 
-                //create folder Kfilm if not exist
-                folderNameKfilm = Constant.EXTERNAL_STORAGE_PATH;
-                File folderDirKfilm = new File(folderNameKfilm);
-                if(!folderDirKfilm.exists()){
-                    folderDirKfilm.mkdir();
-                }
 
-                //create folder Kfilm/John Wick/
-                folderNameMovie = folderNameKfilm + movie.getName() +"/";
-                File folderDirMovie = new File(folderNameMovie);
-                if(!folderDirMovie.exists()){
-                    folderDirMovie.mkdir();
-                }
+                    Log.d("KingPhung:length", lengthOfFile+"");
+                    Log.d("KingPhung:lengthF", external.getFreeSpace()+"");
 
-                //output stream  to write data to device
-                OutputStream outToWrite = new FileOutputStream(folderNameMovie + fileName);
-                total = 0;
-                byte data[] = new byte[1024];
+                    //create folder Kfilm if not exist
+                    folderNameKfilm = Constant.EXTERNAL_STORAGE_PATH;
+                    File folderDirKfilm = new File(folderNameKfilm);
+                    if(!folderDirKfilm.exists()){
+                        folderDirKfilm.mkdir();
+                    }
 
-                while((count = inputStream.read(data))!= -1){
-                    total += count;
-                    outToWrite.write(data,0, count);
-                    publishProgress(""+(total*100/lengthOfFile));
+                    //create folder Kfilm/John Wick/
+                    folderNameMovie = folderNameKfilm + movie.getName() +"/";
+                    File folderDirMovie = new File(folderNameMovie);
+                    if(!folderDirMovie.exists()){
+                        folderDirMovie.mkdir();
+                    }
+
+                    //output stream  to write data to device
+                    OutputStream outToWrite = new FileOutputStream(folderNameMovie + fileName);
+                    total = 0;
+                    byte data[] = new byte[1024];
+
+                    while((count = inputStream.read(data))!= -1){
+                        total += count;
+                        outToWrite.write(data,0, count);
+                        publishProgress(""+(total*100/lengthOfFile));
+                    }
+                    outToWrite.flush();
+                    outToWrite.close();
+                    inputStream.close();
+                }else{
+                    flag_isTooLarge = true;
+                    this.isDownloadSuccessfully = false;
+                    p_i_downloadMovie.onCompleteDownloadMovie(isDownloadSuccessfully, movie, "0");
+                    return null;
                 }
-                outToWrite.flush();
-                outToWrite.close();
-                inputStream.close();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -124,8 +138,9 @@ public class M_DownloadMovie {
 
         @Override
         protected void onPostExecute(String s) {
-            if(typeOfExtension == Constant.MP4_EXTENSION){
+            if(typeOfExtension == Constant.MP4_EXTENSION && s!=null){
                 this.isDownloadSuccessfully = true;
+                movie.setSize(s);
                 p_i_downloadMovie.onCompleteDownloadMovie(isDownloadSuccessfully, movie, s);
             }
         }

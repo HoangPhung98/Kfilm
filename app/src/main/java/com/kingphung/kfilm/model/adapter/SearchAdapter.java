@@ -1,6 +1,7 @@
 package com.kingphung.kfilm.model.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,11 +13,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kingphung.kfilm.R;
 import com.kingphung.kfilm.model.Movie;
 import com.kingphung.kfilm.ultils.Constant;
+import com.kingphung.kfilm.view.fragment.MovieDetail;
 import com.kingphung.kfilm.view.showMovieDetail.V_ShowMovieDetail;
 import com.squareup.picasso.Picasso;
 
@@ -60,7 +64,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             @Override
             public void onClick(View v) {
                 //play this from local
-                showMovieDetail(listAllMovie.get(position), context);
+//                showMovieDetail(listAllMovie.get(position), context);
+                FragmentTransaction fragmentTransaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+                MovieDetail movieDetail = new MovieDetail();
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("movie", listAllMovie.get(position));
+                movieDetail.setArguments(bundle);
+                fragmentTransaction.replace(R.id.fragment_container, movieDetail);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
     }
