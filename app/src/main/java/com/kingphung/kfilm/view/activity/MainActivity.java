@@ -32,6 +32,7 @@ import com.kingphung.kfilm.view.showMovieDetail.V_ShowMovieDetail;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity
@@ -118,6 +119,32 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
+
+    @Override
+    public void onBackPressed() {
+
+        super.onBackPressed();
+        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
+        for(int i=0; i<fragmentList.size(); i++) Log.d("KingPhung", fragmentList.get(i).toString());
+        if(fragmentList.size()>0){
+            switch (fragmentList.get(fragmentList.size()-1).getClass().toString()){
+                case "class com.kingphung.kfilm.view.fragment."+"SearchFragment":
+                    bottomNavigationView.setSelectedItemId(R.id.nav_search);
+                    break;
+                case "class com.kingphung.kfilm.view.fragment."+"DownloadFragment":
+                    bottomNavigationView.setSelectedItemId(R.id.nav_download);
+                    break;
+                case "class com.kingphung.kfilm.view.fragment."+"MoreFragment":
+                    bottomNavigationView.setSelectedItemId(R.id.nav_more);
+                    break;
+            }
+        }else{
+            bottomNavigationView.setSelectedItemId(R.id.nav_home);
+        }
+
+
+    }
+
     private void clearAllFragmentFromBackStack(){
         //move back to main activity / home by removing all other fragment in stack
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);

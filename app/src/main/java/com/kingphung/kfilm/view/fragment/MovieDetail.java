@@ -46,7 +46,13 @@ import org.json.JSONObject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MovieDetail extends Fragment implements View.OnClickListener, V_I_LoadLinkMovie, V_I_CheckWriteExternalPermission, V_I_DownloadMovie, V_I_AddToMyList, V_I_RemoveMovieFromMyList {
+public class MovieDetail extends Fragment
+        implements View.OnClickListener,
+        V_I_LoadLinkMovie,
+        V_I_CheckWriteExternalPermission,
+        V_I_DownloadMovie,
+        V_I_AddToMyList,
+        V_I_RemoveMovieFromMyList {
     Context context;
     private static final String MOVIE = "movie";
     private ImageView banner;
@@ -128,8 +134,8 @@ public class MovieDetail extends Fragment implements View.OnClickListener, V_I_L
         }
 
         if (isThisMovieInMyList) {
-            downloadBtn.setText("Remove");
-            downloadBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_added, 0, 0, 0);
+            addtolistBtn.setText("Remove");
+            addtolistBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_added, 0, 0, 0);
 
         }
     }
@@ -243,18 +249,20 @@ public class MovieDetail extends Fragment implements View.OnClickListener, V_I_L
     @Override
     public void onCompleteAddToMyList(boolean isSuccessfullyAddToMyList) {
         if (isSuccessfullyAddToMyList) {
+            isThisMovieInMyList = true;
             Toast.makeText(context, "Movie added!", Toast.LENGTH_SHORT).show();
-            downloadBtn.setText("Remove");
-            downloadBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_added, 0, 0, 0);
+            addtolistBtn.setText("Remove");
+            addtolistBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_added, 0, 0, 0);
         }
     }
 
     @Override
     public void onCompleteRemoveMovieFromMyList(boolean isSuccessfullyRemove) {
         if (isSuccessfullyRemove) {
-            Toast.makeText(context, "Movie added!", Toast.LENGTH_SHORT).show();
-            downloadBtn.setText("Remove");
-            downloadBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_added, 0, 0, 0);
+            isThisMovieInMyList = false;
+            Toast.makeText(context, "Movie removed!", Toast.LENGTH_SHORT).show();
+            addtolistBtn.setText("Add");
+            addtolistBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_addtolist, 0, 0, 0);
         }
     }
 }
