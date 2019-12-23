@@ -3,6 +3,7 @@ package com.kingphung.kfilm.view.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import com.google.android.exoplayer2.C;
@@ -13,9 +14,12 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.MergingMediaSource;
 import com.google.android.exoplayer2.source.SingleSampleMediaSource;
+import com.google.android.exoplayer2.source.dash.DashMediaSource;
+import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
 import com.kingphung.kfilm.R;
@@ -78,6 +82,8 @@ public class MoviePlayActivity extends AppCompatActivity
                 }
             }
             link_GGDRIVE = getIntent().getExtras().getString("URL_VIDEO");
+//            link_GGDRIVE = "https://drive.google.com/file/d/1GkQsqXzF9BHqz97k8ltUky3xbPipjTCa/preview";
+
             link_Subtitle = getIntent().getExtras().getString("URL_SUB");
             initExo(link_GGDRIVE, link_Subtitle, movie);
 
@@ -103,12 +109,24 @@ public class MoviePlayActivity extends AppCompatActivity
     }
 
     private void initExo(String linkVideo, String linkSub, Movie movie) {
+        Log.d("KingPhungaa","LINK: "+linkVideo);
         // thiết lập trình xem phim, sử dụng thư viện exoPlayer.
 
         playerView = findViewById(R.id.exo_moviePlay);
         simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(this);
         playerView.setPlayer(simpleExoPlayer);
 
+
+//        // Create a data source factory.
+//        DataSource.Factory dataSourceFactory =
+//                new DefaultHttpDataSourceFactory(Util.getUserAgent(this, "kfilm"));
+//// Create a DASH media source pointing to a DASH manifest uri.
+//        MediaSource mediaSource = new DashMediaSource.Factory(dataSourceFactory)
+//                .createMediaSource(Uri.parse(linkVideo));
+//// Create a player instance.
+////        SimpleExoPlayer player = new SimpleExoPlayer.Builder(context).build();
+//// Prepare the player with the media source.
+////        player.prepare(mediaSource);
         //thiết lập nguồn dữ liệu bao gồm: video, subtitle để play movie
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this,
                 Util.getUserAgent(this, "kfilm"));

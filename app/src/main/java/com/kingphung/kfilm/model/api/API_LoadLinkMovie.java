@@ -1,6 +1,7 @@
 package com.kingphung.kfilm.model.api;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -69,6 +70,7 @@ public class API_LoadLinkMovie {
     }
     private String getLinkDriveOrSub(String id_drive_or_sub){
         //return link ggdrive that store video and subtitle
+        Log.d("KingPhung","Link "+LINK_GG_DRIVE + id_drive_or_sub + KEY);
         return LINK_GG_DRIVE + id_drive_or_sub + KEY;
     }
     private void setRequestTimeout(Request request){
