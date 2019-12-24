@@ -78,13 +78,6 @@ public class M_DownloadMovie {
                 fileName = concateFileExtension(fileName, typeOfExtension);
 
                 //create folder name
-//                folderName = Environment.getExternalStorageDirectory()+
-//                            File.separator +
-//                            "Kfilm" +
-//                            File.separator +
-//                            movie.getName() +
-//                            File.separator;
-
 
                     Log.d("KingPhung:length", lengthOfFile+"");
                     Log.d("KingPhung:lengthF", external.getFreeSpace()+"");

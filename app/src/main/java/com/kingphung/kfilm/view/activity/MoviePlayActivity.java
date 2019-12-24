@@ -64,7 +64,6 @@ public class MoviePlayActivity extends AppCompatActivity
                 setFullScreen();
             }
         });
-//        setFullScreen();
 
 
         //lấy dữ liệu về phim bao gồm meta data của phim, link đến file mp4 và file subtitle của phim
@@ -82,8 +81,6 @@ public class MoviePlayActivity extends AppCompatActivity
                 }
             }
             link_GGDRIVE = getIntent().getExtras().getString("URL_VIDEO");
-//            link_GGDRIVE = "https://drive.google.com/file/d/1GkQsqXzF9BHqz97k8ltUky3xbPipjTCa/preview";
-
             link_Subtitle = getIntent().getExtras().getString("URL_SUB");
             initExo(link_GGDRIVE, link_Subtitle, movie);
 
@@ -116,17 +113,6 @@ public class MoviePlayActivity extends AppCompatActivity
         simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(this);
         playerView.setPlayer(simpleExoPlayer);
 
-
-//        // Create a data source factory.
-//        DataSource.Factory dataSourceFactory =
-//                new DefaultHttpDataSourceFactory(Util.getUserAgent(this, "kfilm"));
-//// Create a DASH media source pointing to a DASH manifest uri.
-//        MediaSource mediaSource = new DashMediaSource.Factory(dataSourceFactory)
-//                .createMediaSource(Uri.parse(linkVideo));
-//// Create a player instance.
-////        SimpleExoPlayer player = new SimpleExoPlayer.Builder(context).build();
-//// Prepare the player with the media source.
-////        player.prepare(mediaSource);
         //thiết lập nguồn dữ liệu bao gồm: video, subtitle để play movie
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this,
                 Util.getUserAgent(this, "kfilm"));

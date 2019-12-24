@@ -20,7 +20,7 @@ public class API_LoadLinkMovie {
     //CONSTANTS
     final private String IP = "http://52.231.163.176:3001";
     final static private String LINK_GG_DRIVE = "https://www.googleapis.com/drive/v3/files/";
-    final static private String KEY = "?alt=media&key=AIzaSyBbgWECKniqq5g9qdrqz1KOtnn0Zhu8tKs";
+    final static private String KEY = "?alt=media&key=AIzaSyA-dV0VdZ_A_3lxQB75P2c9IXBoFViixjk";
     //CONSTANTS>>>
 
     //Global vars
